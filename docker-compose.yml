@@ -1,0 +1,47 @@
+# FE : reactJs
+# BE : Spring boot
+# DB : Postgres
+# Cloud : AWS
+# CI/CD : Github Actions
+
+version: "3.8"
+services:
+  db:
+    image: postgres:13
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+    networks:
+      - jimechu
+
+  backend:
+    image: spring-boot-app
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - db
+    networks:
+      - jimechu
+
+  frontend:
+    image: react-app
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    ports:
+      - "3000:3000"
+    networks:
+      - jimechu
+
+volumes:
+  postgres_data: {}
+
+networks:
+  jimechu:
+    driver: bridge
