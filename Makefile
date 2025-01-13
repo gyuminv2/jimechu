@@ -1,7 +1,10 @@
 DOCKER_COMPOSE_FILE = ./docker-compose.yml
 DOCKER_COMPOSE = docker compose --file $(DOCKER_COMPOSE_FILE)
 
-all: up
+all: jar up
+
+jar:
+	cd /Users/gyumpark/jimechu/backend/jimechu && sh gradlew clean build # jar 파일 생성
 
 up:
 	$(DOCKER_COMPOSE) up --build -d # 컨테이너 생성
