@@ -24,6 +24,9 @@
         <td>
           <a href="#" th:href="@{/menus/{id}/edit (id=${menu.id})}"
              class="btn btn-primary" role="button">수정</a>
+          <form th:action="@{/menus/{id}/delete (id=${menu.id})}" method="post" style="display: inline;">
+            <button type="submit" class="btn btn-danger" onclick="return confirm('정말로 삭제하시겠습니까?');">삭제</button>
+          </form>
         </td>
       </tr>
       </tbody>

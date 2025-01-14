@@ -29,4 +29,12 @@ public class MenuRepository {
         return em.createQuery("select m from Menu m", Menu.class)
                 .getResultList();
     }
+
+    public void deleteById(Long id) {
+        // 삭제할 메뉴 조회
+        Menu menu = em.find(Menu.class, id);
+        if (menu != null) {
+            em.remove(menu);
+        }
+    }
 }

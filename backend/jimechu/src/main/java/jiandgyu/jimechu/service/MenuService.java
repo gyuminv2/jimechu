@@ -52,4 +52,13 @@ public class MenuService {
         Menu menu = menuRepository.findOne(id);
         menu.setName(name);
     }
+
+    /**
+     * 메뉴 삭제
+     * @param menuId
+     */
+    @Transactional
+    public void deleteMenu(Long menuId) {
+        menuRepository.deleteById(menuId);
+    }
 }

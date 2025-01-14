@@ -7,10 +7,7 @@ import jiandgyu.jimechu.service.MenuService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -86,6 +83,18 @@ public class MenuController {
         menuService.updateMenu(menuId, form.getName());
         return "redirect:/menus";
     }
+
+    /**
+     * 메뉴 삭제
+     * @param menuId
+     * @return String
+     */
+    @PostMapping(value = "/menus/{menuId}/delete")
+    public String deleteMenu(@PathVariable("menuId") Long menuId) {
+        menuService.deleteMenu(menuId);
+        return "redirect:/menus";
+    }
+
 //    @PostMapping(value = "/menus/{menuId}/edit")
 //    public String updateMenu(@ModelAttribute("form") MenuForm form) {
 //        Menu menu = new Menu();
