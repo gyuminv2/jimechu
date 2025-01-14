@@ -22,7 +22,7 @@ public class MemberService {
      */
     @Transactional // readOnly 적용 X
     public Long join(Member member) {
-        verifyDuplicateMember(member);
+//        verifyDuplicateMember(member); // 로그인 기능 임시로... 대기.
         memberRepository.save(member);
         return member.getId();
     }

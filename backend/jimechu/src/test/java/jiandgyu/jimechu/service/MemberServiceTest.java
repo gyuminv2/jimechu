@@ -29,17 +29,18 @@ public class MemberServiceTest {
         assertEquals(member, memberRepository.findOne(saveId));
     }
 
-    @Test(expected = IllegalStateException.class)
-    public void 중복_회원_예외() throws Exception {
-        Member member1 = new Member();
-        Member member2 = new Member();
-
-        member1.setNickname("지나");
-        member2.setNickname("지나");
-
-        memberService.join(member1);
-        memberService.join(member2);
-
-        fail("예외 발생 (중복 닉네임 사용)");
-    }
+    // 일단은 중복 가능하도록
+//    @Test(expected = IllegalStateException.class)
+//    public void 중복_회원_예외() throws Exception {
+//        Member member1 = new Member();
+//        Member member2 = new Member();
+//
+//        member1.setNickname("지나");
+//        member2.setNickname("지나");
+//
+//        memberService.join(member1);
+//        memberService.join(member2);
+//
+//        fail("예외 발생 (중복 닉네임 사용)");
+//    }
 }

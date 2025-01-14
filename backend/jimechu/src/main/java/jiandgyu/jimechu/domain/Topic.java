@@ -9,10 +9,10 @@ import java.util.List;
 
 @Entity
 @Getter @Setter
-public class Category {
+public class Topic {
 
     @Id @GeneratedValue
-    @Column(name = "catergory_id")
+    @Column(name = "topic_id")
     private Long id;
 
     private String name;
@@ -21,12 +21,6 @@ public class Category {
     @JoinColumn(name = "member_id")
     private Member member;
 
-    @OneToMany(mappedBy = "category")
-    private List<MenuCategory> menuCategories = new ArrayList<>();
-
-    public void setMember(Member member) {
-        this.member = member;
-        member.getCategories().add(this);
-    }
-
+    @OneToMany(mappedBy = "topic")
+    private List<Menu> menus = new ArrayList<>();
 }

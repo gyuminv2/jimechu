@@ -18,5 +18,5 @@ public class Member {
     private String nickname;
 
     @OneToMany(mappedBy = "member")
-    private List<Category> categories = new ArrayList<>();
+    private List<Topic> topics = new ArrayList<>();
 }
