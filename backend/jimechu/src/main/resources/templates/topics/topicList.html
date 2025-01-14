@@ -1,0 +1,35 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="fragments/header :: header" />
+<body>
+<div class="container">
+  <div th:replace="fragments/bodyHeader :: bodyHeader"/>
+  <div>
+    <table class="table table-striped">
+      <thead>
+      <tr>
+        <th>#</th>
+        <th>주제이름</th>
+        <!--        <th>가격</th>-->
+        <!--        <th>재고수량</th>-->
+        <th></th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="topic : ${topics}">
+        <td th:text="${topic.id}"></td>
+        <td th:text="${topic.name}"></td>
+        <!--        <td th:text="${topic.price}"></td>-->
+        <!--        <td th:text="${topic.stockQuantity}"></td>-->
+        <td>
+          <a href="#" th:href="@{/topics/{id}/edit (id=${topic.id})}"
+             class="btn btn-primary" role="button">수정</a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div th:replace="fragments/footer :: footer"/>
+</div> <!-- /container -->
+</body>
+</html>

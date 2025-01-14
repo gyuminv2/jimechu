@@ -23,4 +23,13 @@ public class Topic {
 
     @OneToMany(mappedBy = "topic")
     private List<Menu> menus = new ArrayList<>();
+
+    //==생성 메서드==//
+    public static Topic createTopic(Member member) {
+        Topic topic = new Topic();
+        topic.setMember(member);
+        // menu는 우짜지??
+
+        return topic;
+    }
 }

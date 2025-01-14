@@ -1,0 +1,128 @@
+/* 기본 설정 */
+body {
+    padding-top: 20px;
+    padding-bottom: 20px;
+    background-color: #121212; /* 어두운 배경색 */
+    color: #ffffff; /* 텍스트 밝은 흰색 */
+}
+
+/* 헤더, 마케팅, 푸터 설정 */
+.header,
+.marketing,
+.footer {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+/* 헤더 스타일 */
+.header {
+    border-bottom: 1px solid #333333; /* 어두운 테두리 */
+    color: #ffffff; /* 헤더 텍스트 밝게 */
+}
+.header h1, .header h2, .header h3, .header h4, .header h5, .header h6 {
+    color: #ffffff; /* 헤더 글씨 밝은 흰색 */
+}
+
+/* 푸터 스타일 */
+.footer {
+    padding-top: 19px;
+    color: #fc64d4; /* 푸터 텍스트 연한 회색 */
+    border-top: 1px solid #333333; /* 어두운 테두리 */
+}
+
+/* 컨테이너 스타일 */
+@media (min-width: 768px) {
+    .container {
+        max-width: 730px;
+        background-color: #1f1f1f; /* 컨테이너 어두운 배경 */
+        border-radius: 10px; /* 둥근 모서리 */
+        box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.5); /* 어두운 그림자 */
+    }
+}
+.container-narrow > hr {
+    margin: 30px 0;
+    border-color: #444444; /* 어두운 테두리 */
+}
+
+/* 주목을 끄는 메시지 및 버튼 */
+.jumbotron {
+    text-align: center;
+    border-bottom: 1px solid #333333; /* 어두운 테두리 */
+    background-color: #1f1f1f; /* 어두운 배경 */
+    color: #ffffff; /* 텍스트 밝게 */
+}
+.jumbotron h1, .jumbotron h2, .jumbotron h3, .jumbotron h4, .jumbotron h5, .jumbotron h6 {
+    color: #ffffff; /* 글씨 밝게 */
+}
+.jumbotron .btn {
+    font-size: 21px;
+    padding: 14px 24px;
+    border: none;
+    border-radius: 5px;
+    color: #ffffff; /* 버튼 텍스트 밝은 흰색 */
+    background-color: #575757; /* 버튼 어두운 배경 */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+.jumbotron .btn:hover {
+    background-color: #757575; /* 버튼 호버 밝은 회색 */
+    transform: scale(1.05);
+}
+
+/* 마케팅 섹션 */
+.marketing {
+    margin: 40px 0;
+    background-color: #1f1f1f; /* 어두운 배경 */
+    color: #ffffff; /* 텍스트 밝게 */
+    padding: 15px;
+    border-radius: 5px;
+}
+.marketing h1, .marketing h2, .marketing h3, .marketing h4, .marketing h5, .marketing h6 {
+    color: #ffffff; /* 제목 밝은 흰색 */
+}
+.marketing p {
+    color: #fc64d4; /* 일반 텍스트 연한 회색 */
+}
+.marketing p + h4 {
+    margin-top: 28px;
+    color: #ffffff; /* 텍스트 밝게 */
+}
+
+/* 반응형 스타일 */
+@media screen and (min-width: 768px) {
+    .header,
+    .marketing,
+    .footer {
+        padding-left: 0;
+        padding-right: 0;
+    }
+    .header {
+        margin-bottom: 30px;
+    }
+    .jumbotron {
+        border-bottom: 0;
+    }
+}
+
+/* 공통 텍스트 설정 (h1~h6) */
+h1, h2, h3, h4, h5, h6 {
+    color: #ffffff; /* 모든 헤딩 밝게 */
+}
+p, span, a, li, label, div {
+    color: #fc64d4; /* 일반 텍스트 */
+}
+
+h3.text-muted {
+    color: #ffffff !important; /* 텍스트를 밝은 흰색으로 설정 */
+    text-decoration: none;     /* 링크 밑줄 제거 */
+}
+
+.table thead th {
+    color: #ffffff !important; /* 텍스트를 밝은 흰색으로 설정 */
+    background-color: #333333; /* 헤더 배경을 어두운 색으로 설정 */
+    border-color: #444444;     /* 테두리 색상을 어두운 색으로 설정 */
+}
+
+.table tbody td {
+    color: #bbbbbb; /* 셀 텍스트를 연한 회색으로 설정 */
+    border-color: #444444; /* 셀 테두리 색상 */
+}

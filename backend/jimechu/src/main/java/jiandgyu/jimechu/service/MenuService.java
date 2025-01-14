@@ -41,4 +41,15 @@ public class MenuService {
     public Menu findOne(Long menuId) {
         return menuRepository.findOne(menuId);
     }
+
+    /**
+     * 영속성 컨텍스트가 자동 변경
+     * @param id
+     * @param name
+     */
+    @Transactional
+    public void updateMenu(Long id, String name) {
+        Menu menu = menuRepository.findOne(id);
+        menu.setName(name);
+    }
 }
