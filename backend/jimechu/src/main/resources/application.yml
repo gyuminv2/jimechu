@@ -8,13 +8,19 @@ spring:
 
   jpa:
     hibernate:
-      ddl-auto: create
+#      ddl-auto: create
+      ddl-auto: update
     properties:
       hibernate:
-        # show_sql: true
-        format_sql: true
+        show_sql: true
+        format_sql: trueㅇ
 
 logging.level:
   org.hibernate.SQL: debug
   # org.hibernate.type: trace #스프링 부트 2.x, hibernate5
   # org.hibernate.orm.jdbc.bind: trace #스프링 부트 3.x, hibernate6
+
+# Swagger
+springdoc:
+  api-docs:
+    path: /api-docs
