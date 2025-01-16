@@ -51,7 +51,7 @@ public class MenuService {
     /**
      * 특정 Topic에 속한 Menu 조회
      */
-    public List<Menu> findMenusByTopic(Long topicId) {
+    public List<Menu> getMenusByTopic(Long topicId) {
         return menuRepository.findAllByTopicId(topicId);
     }
 

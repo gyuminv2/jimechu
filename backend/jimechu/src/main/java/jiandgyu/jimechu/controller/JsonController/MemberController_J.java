@@ -35,7 +35,7 @@ public class MemberController_J {
     }
 
     /**
-     * 회원 생성 (JSON 요청 처리)
+     * Member 생성 (JSON 요청 처리)
      */
     @PostMapping(value = "/members/new", consumes = "application/json", produces = "application/json")
     @Operation(summary = "회원 생성", description = "새로운 회원을 생성합니다.")
@@ -50,7 +50,7 @@ public class MemberController_J {
     }
 
     /**
-     * 전체 회원 조회 (JSON 요청 처리)
+     * 전체 Member 조회 (JSON 요청 처리)
      */
     @GetMapping(value = "/members", produces = "application/json")
     @Operation(summary = "전체 회원 조회", description = "전체 회원을 조회합니다.")
@@ -63,7 +63,7 @@ public class MemberController_J {
     }
 
     /**
-     * 특정 회원 조회 (JSON 요청 처리)
+     * 특정 Member 조회 (JSON 요청 처리)
      */
     @GetMapping(value = "/members/{memberId}", produces = "application/json")
     @Operation(summary = "특정 회원 조회", description = "회원을 조회합니다.")
@@ -73,13 +73,13 @@ public class MemberController_J {
     }
 
     /**
-     * 특정 회원의 Topics 조회 (JSON 요청 처리)
+     * 특정 Member의 Topics 조회 (JSON 요청 처리)
      */
     @GetMapping(value = "/members/{memberId}/topics", produces = "application/json")
     @ResponseBody
     @Operation(summary = "특정 멤버의 Topic 조회", description = "특정 맴버가 생성한 Topic 목록을 반환합니다.")
     public List<TopicDTO> getTopicsByMember(@PathVariable Long memberId) {
-        List<Topic> topics = memberService.getMemberTopics(memberId);
+        List<Topic> topics = memberService.getTopicsByMember(memberId);
         List<TopicDTO> topicDTOs = new ArrayList<>();
 
         for (Topic topic : topics) {

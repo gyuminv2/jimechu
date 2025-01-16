@@ -3,10 +3,13 @@ package jiandgyu.jimechu.controller.JsonController;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jiandgyu.jimechu.domain.Member;
+import jiandgyu.jimechu.domain.Menu;
 import jiandgyu.jimechu.domain.Topic;
 import jiandgyu.jimechu.dto.MemberDTO;
+import jiandgyu.jimechu.dto.MenuDTO;
 import jiandgyu.jimechu.dto.TopicCreateDTO;
 import jiandgyu.jimechu.dto.TopicDTO;
+import jiandgyu.jimechu.service.MenuService;
 import jiandgyu.jimechu.service.TopicService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -24,6 +27,7 @@ import java.util.stream.Collectors;
 public class TopicController_J {
 
     private final TopicService topicService;
+    private final MenuService menuService;
 
     /**
      * Topic 생성 (JSON 요청 처리)
@@ -51,6 +55,20 @@ public class TopicController_J {
                 .map(TopicDTO::new)
                 .collect(Collectors.toList());
     }
+
+    /**
+     * 특정 Topic의 menus 조회 (JSON 요청 처리)
+     */
+    @GetMapping(value = "/topics/{topicId}/menus", produces = "application/json")
+    @Operation(summary = "특정 Topic의 Menus 조회", description = "특정 Topic의 Menu 목록을 반환합니다.")
+    public List<MenuDTO> getMenusByTopic(@PathVariable Long topicId) {
+        List<Menu> menus = menuService.getMenusByTopic(topicId);
+
+        return menus.stream()
+                .map(MenuDTO::new)
+                .collect(Collectors.toList());
+    }
+
 
 //    /**
 //     * 특정 Member의 Topics 조회 (JSON 요청 처리)

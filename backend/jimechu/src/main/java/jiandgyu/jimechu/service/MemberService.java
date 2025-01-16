@@ -55,7 +55,7 @@ public class MemberService {
     /**
      * Topics 조회
      */
-    public List<Topic> getMemberTopics(Long memberId) {
-        return memberRepository.findTopicsByMemberId(memberId);
+    public List<Topic> getTopicsByMember(Long memberId) {
+        return memberRepository.findAllByMemberId(memberId);
     }
 }
