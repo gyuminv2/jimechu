@@ -4,9 +4,6 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
-import java.util.ArrayList;
-import java.util.List;
-
 @Entity
 @Getter @Setter
 public class Menu {
@@ -20,4 +17,18 @@ public class Menu {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "topic_id")
     private Topic topic;
+
+    //==연관관계 메서드==//
+    public void setTopic(Topic topic) {
+        this.topic = topic;
+        topic.getMenus().add(this);
+    }
+
+    //==생성 메서드==//
+    public static Menu createMenu(String name, Topic topic) {
+        Menu menu = new Menu();
+        menu.setName(name);
+        menu.setTopic(topic);
+        return menu;
+    }
 }

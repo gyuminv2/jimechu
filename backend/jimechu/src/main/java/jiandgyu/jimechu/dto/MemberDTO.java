@@ -1,20 +1,23 @@
 package jiandgyu.jimechu.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
 import jiandgyu.jimechu.domain.Member;
 import jiandgyu.jimechu.domain.Topic;
 import lombok.Data;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @Data
 public class MemberDTO {
 
     private Long id;
     private String nickname;
-    private List<Topic> topics;
 
-    //==연관 메서드==//
+    private List<Map<Long, String>> topic;
+
     public MemberDTO() {
         id = null;
         nickname = "null";
@@ -23,6 +26,8 @@ public class MemberDTO {
     public MemberDTO(Member member) {
         this.id = member.getId();
         this.nickname = member.getNickname();
-        this.topics = member.getTopics();
+        this.topic = member.getTopics().stream()
+                .map(topic -> Map.of(topic.getId(), topic.getTitle()))
+                .collect(Collectors.toList());
     }
 }

@@ -2,7 +2,9 @@ package jiandgyu.jimechu.service;
 
 
 import jiandgyu.jimechu.domain.Menu;
+import jiandgyu.jimechu.domain.Topic;
 import jiandgyu.jimechu.repository.MenuRepository;
+import jiandgyu.jimechu.repository.TopicRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,19 +17,25 @@ import java.util.List;
 public class MenuService {
 
     private final MenuRepository menuRepository;
+    private final TopicRepository topicRepository;
 
     /**
-     * 메뉴 추가
-     * @param menu
+     * Menu 생성
      */
     @Transactional
-    public void saveMenu(Menu menu) {
+    public Long createMenu(Long topicId, String name) {
+        Topic topic = topicRepository.findOne(topicId);
+        if (topic == null) {
+            throw new IllegalArgumentException("존재하지 않는 topicId : " + topicId);
+        }
+        Menu menu = Menu.createMenu(name, topic);
+
         menuRepository.save(menu);
+        return menu.getId();
     }
 
     /**
-     * 전체 메뉴 조회
-     * @return List
+     * 전체 Menu 조회
      */
     public List<Menu> findMenus() {
         return menuRepository.findAll();
@@ -35,17 +43,20 @@ public class MenuService {
 
     /**
      * 메뉴 1개 조회
-     * @param menuId
-     * @return Menu
      */
     public Menu findOne(Long menuId) {
         return menuRepository.findOne(menuId);
     }
 
     /**
+     * 특정 Topic에 속한 Menu 조회
+     */
+    public List<Menu> findMenusByTopic(Long topicId) {
+        return menuRepository.findAllByTopicId(topicId);
+    }
+
+    /**
      * 영속성 컨텍스트가 자동 변경
-     * @param id
-     * @param name
      */
     @Transactional
     public void updateMenu(Long id, String name) {
@@ -55,10 +66,9 @@ public class MenuService {
 
     /**
      * 메뉴 삭제
-     * @param menuId
      */
     @Transactional
     public void deleteMenu(Long menuId) {
-        menuRepository.deleteById(menuId);
+        menuRepository.delete(menuId);
     }
 }

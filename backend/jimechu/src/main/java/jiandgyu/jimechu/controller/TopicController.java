@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Controller
@@ -24,26 +25,30 @@ public class TopicController {
     private final MemberService memberService;
     private final MenuService menuService;
 
-    @GetMapping(value = "/topic")
+    /**
+     * Topic 생성 폼
+     */
+    @GetMapping(value = "/topic/new")
     public String createForm(Model model) {
         List<Member> members = memberService.findMembers();
-//        List<Menu> menus = menuService.findMenus();
-
         model.addAttribute("members", members);
-//        model.addAttribute("menus", menus);
 
         return "topics/topicForm";
     }
 
-    @PostMapping(value = "/topic")
-    public String topic(@RequestParam("memberId") Long memberId) {
-//        topicService.topic(memberId, menuId);
-        topicService.topic(memberId);
+    /**
+     * Topic 생성
+     */
+    @PostMapping(value = "/topic/new")
+    public String createTopic(@RequestParam("memberId") Long memberId,
+                              @RequestParam("title") String title) {
+        topicService.createTopic(memberId, title, new ArrayList<>());
         return "redirect:/topics";
     }
 
     /**
-     * 전체 주제 리스트
+     * 전체 Topic 리스트 조회
+     *
      * @param model
      * @return String
      */

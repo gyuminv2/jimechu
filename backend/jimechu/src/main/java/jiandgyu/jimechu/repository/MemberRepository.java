@@ -2,6 +2,7 @@ package jiandgyu.jimechu.repository;
 
 import jakarta.persistence.EntityManager;
 import jiandgyu.jimechu.domain.Member;
+import jiandgyu.jimechu.domain.Topic;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -47,6 +48,15 @@ public class MemberRepository {
     public List<Member> findByNickname(String Nickname) {
         return em.createQuery("select m from Member m where m.nickname = :nickname", Member.class)
                 .setParameter("nickname", Nickname)
+                .getResultList();
+    }
+
+    /**
+     * Topic 조회
+     */
+    public List<Topic> findTopicsByMemberId(Long memberId) {
+        return em.createQuery("select t from Topic t where t.member.id = :memberId", Topic.class)
+                .setParameter("memberId", memberId)
                 .getResultList();
     }
 }

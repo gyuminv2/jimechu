@@ -38,7 +38,7 @@ public class MenuController {
         Menu menu = new Menu();
         menu.setName(form.getName());
 
-        menuService.saveMenu(menu);
+//        menuService.saveMenu(menu);
         return "redirect:/menus";
     }
 

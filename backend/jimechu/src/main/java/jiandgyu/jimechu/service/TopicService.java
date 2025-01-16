@@ -19,28 +19,49 @@ public class TopicService {
     private final TopicRepository topicRepository;
     private final MemberRepository memberRepository;
 
-    // 생성
+    /**
+     * Topic 생성
+     */
     @Transactional
-    public Long topic(Long memberId) {
+    public Long createTopic(Long memberId, String title, List<Menu> menus) {
 
         // 엔티티 조회
         Member member = memberRepository.findOne(memberId);
-
-        // menu 생성...
+        if (member == null) {
+            throw new IllegalArgumentException("존재하지 않는 memeberId : " + memberId);
+        }
 
         // Topic 생성
-        Topic topic = Topic.createTopic(member);
+        Topic topic = Topic.createTopic(title, member);
 
         // Topic 저장
         topicRepository.save(topic);
         return topic.getId();
     }
 
+    /**
+     * 전체 Topic 조회
+     */
     public List<Topic> findTopics() {
         return topicRepository.findAll();
     }
 
-    // 취소
+    /**
+     * 특정 Member에 속한 Topic 조회
+     */
+    public List<Topic> findTopicsByMemberId(Long memberId) {
+        return topicRepository.findAllByMemberId(memberId);
+    }
 
-    // 검색
+    /**
+     * topic update도 있어야할듯 (title 바꾸기, menu 추가, menu 삭제)
+     */
+
+
+    /**
+     * topic 삭제 ... 구현하려면 topic이 삭제되면 얘와 연관된 menu들도 전부 삭제되어야함...
+     */
+    public void deleteTopic(Long topicId) {
+        topicRepository.delete(topicId);
+    }
 }

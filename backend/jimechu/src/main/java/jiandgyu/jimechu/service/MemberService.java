@@ -1,6 +1,7 @@
 package jiandgyu.jimechu.service;
 
 import jiandgyu.jimechu.domain.Member;
+import jiandgyu.jimechu.domain.Topic;
 import jiandgyu.jimechu.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -49,5 +50,12 @@ public class MemberService {
      */
     public Member findOne(Long memberId) {
         return memberRepository.findOne(memberId);
+    }
+
+    /**
+     * Topics 조회
+     */
+    public List<Topic> getMemberTopics(Long memberId) {
+        return memberRepository.findTopicsByMemberId(memberId);
     }
 }

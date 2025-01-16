@@ -30,9 +30,18 @@ public class MenuRepository {
                 .getResultList();
     }
 
-    public void deleteById(Long id) {
+    /**
+     * 특정 Topic에 속한 Menu 조회
+     */
+    public List<Menu> findAllByTopicId(Long topicId) {
+        return em.createQuery("select m from Menu m where m.topic.id = :topicId", Menu.class)
+                .setParameter("topicId", topicId)
+                .getResultList();
+    }
+
+    public void delete(Long menuId) {
         // 삭제할 메뉴 조회
-        Menu menu = em.find(Menu.class, id);
+        Menu menu = em.find(Menu.class, menuId);
         if (menu != null) {
             em.remove(menu);
         }
