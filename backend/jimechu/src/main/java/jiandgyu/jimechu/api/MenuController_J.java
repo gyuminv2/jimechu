@@ -1,4 +1,4 @@
-package jiandgyu.jimechu.controller.JsonController;
+package jiandgyu.jimechu.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
@@ -16,6 +16,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/api/menus")
 @Tag(name = "Menu API", description = "메뉴 API")
 public class MenuController_J {
 
@@ -24,7 +25,7 @@ public class MenuController_J {
     /**
      * Menu 생성 (JSON 요청 처리)
      */
-    @PostMapping(value = "/menu/new", consumes = "application/json", produces = "application/json")
+    @PostMapping(value = "new", consumes = "application/json", produces = "application/json")
     @Operation(summary = "Menu 생성", description = "특정 Topic의 새로운 Menu를 생성합니다.")
     public Map<String, String> createMenu(@RequestBody MenuCreateDTO menuCreateDTO) {
         Long menuId = menuService.createMenu(menuCreateDTO.getTopicId(), menuCreateDTO.getName());
@@ -38,7 +39,7 @@ public class MenuController_J {
     /**
      * 전체 Menu 조회 (JSON 요청 처리)
      */
-    @GetMapping(value = "/menus", produces = "application/json")
+    @GetMapping(produces = "application/json")
     @Operation(summary = "전체 Menu 조회", description = "전체 Menu를 조회합니다.")
     public List<MenuDTO> getAllMenus() {
         List<Menu> menus = menuService.findMenus();
@@ -64,7 +65,7 @@ public class MenuController_J {
     /**
      * 특정 Menu 삭제 (JSON 요청 처리)
      */
-    @DeleteMapping(value = "/{menuId}", produces = "application/json")
+    @DeleteMapping(value = "{menuId}", produces = "application/json")
     @Operation(summary = "Menu 삭제", description = "특정 Menu를 삭제합니다.")
     public Map<String, String> deleteMenu(@PathVariable Long menuId) {
         menuService.deleteMenu(menuId);

@@ -1,21 +1,17 @@
-package jiandgyu.jimechu.controller.JsonController;
+package jiandgyu.jimechu.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jiandgyu.jimechu.domain.Member;
 import jiandgyu.jimechu.domain.Menu;
 import jiandgyu.jimechu.domain.Topic;
-import jiandgyu.jimechu.dto.MemberDTO;
 import jiandgyu.jimechu.dto.MenuDTO;
 import jiandgyu.jimechu.dto.TopicCreateDTO;
 import jiandgyu.jimechu.dto.TopicDTO;
 import jiandgyu.jimechu.service.MenuService;
 import jiandgyu.jimechu.service.TopicService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,6 +20,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @Tag(name = "Topic API", description = "주제 API")
+@RequestMapping("/api/topics")
 public class TopicController_J {
 
     private final TopicService topicService;
@@ -32,7 +29,7 @@ public class TopicController_J {
     /**
      * Topic 생성 (JSON 요청 처리)
      */
-    @PostMapping(value = "/topic/new", consumes = "application/json", produces = "application/json")
+    @PostMapping(value = "new", consumes = "application/json", produces = "application/json")
     @Operation(summary = "Topic 생성", description = "특정 Member의 새로운 Topic을 생성합니다.")
     public Map<String, String> createTopic(@RequestBody TopicCreateDTO topicCreateDTO) {
         Long topicId = topicService.createTopic(topicCreateDTO.getMemberId(), topicCreateDTO.getTitle(), null);
@@ -46,7 +43,7 @@ public class TopicController_J {
     /**
      * 전체 Topic 조회 (JSON 요청 처리)
      */
-    @GetMapping(value = "/topics", produces = "application/json")
+    @GetMapping(produces = "application/json")
     @Operation(summary = "전체 Topic 조회", description = "전체 Topic을 조회합니다.")
     public List<TopicDTO> getAllTopics() {
         List<Topic> topics = topicService.findTopics();
@@ -59,7 +56,7 @@ public class TopicController_J {
     /**
      * 특정 Topic의 menus 조회 (JSON 요청 처리)
      */
-    @GetMapping(value = "/topics/{topicId}/menus", produces = "application/json")
+    @GetMapping(value = "{topicId}/menus", produces = "application/json")
     @Operation(summary = "특정 Topic의 Menus 조회", description = "특정 Topic의 Menu 목록을 반환합니다.")
     public List<MenuDTO> getMenusByTopic(@PathVariable Long topicId) {
         List<Menu> menus = menuService.getMenusByTopic(topicId);
@@ -86,7 +83,7 @@ public class TopicController_J {
     /**
      * 특정 Topic 삭제 (JSON 요청 처리)
      */
-    @DeleteMapping(value = "/{topicId}", produces = "application/json")
+    @DeleteMapping(value = "{topicId}", produces = "application/json")
     @Operation(summary = "Topic 삭제", description = "특정 Topic을 삭제합니다.")
     public Map<String, String> deleteTopic(@PathVariable Long topicId) {
         topicService.deleteTopic(topicId);

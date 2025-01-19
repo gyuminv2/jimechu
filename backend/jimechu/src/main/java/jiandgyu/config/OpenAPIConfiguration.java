@@ -1,4 +1,4 @@
-package config;
+package jiandgyu.config;
 
 import io.swagger.v3.oas.models.OpenAPI;
 import io.swagger.v3.oas.models.info.Contact;
@@ -23,9 +23,9 @@ public class OpenAPIConfiguration {
         myContact.setEmail("inamemin3@gmail.com");
 
         Info information = new Info()
-                .title("Employee Management System API")
+                .title("지메추 API")
                 .version("1.0")
-                .description("This API exposes endpoints to manage employees.")
+                .description("This API exposes endpoints to menu recommend.")
                 .contact(myContact);
         return new OpenAPI().info(information).servers(List.of(server));
     }
