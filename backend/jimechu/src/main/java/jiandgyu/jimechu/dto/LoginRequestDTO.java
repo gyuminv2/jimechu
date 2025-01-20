@@ -3,7 +3,7 @@ package jiandgyu.jimechu.dto;
 import lombok.Data;
 
 @Data
-public class MemberCreateDTO {
+public class LoginRequestDTO {
 
     private String nickname;
 

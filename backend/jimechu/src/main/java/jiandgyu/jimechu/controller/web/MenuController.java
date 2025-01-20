@@ -1,6 +1,5 @@
-package jiandgyu.jimechu.controller;
+package jiandgyu.jimechu.controller.web;
 
-import jiandgyu.jimechu.controller.form.MemberForm;
 import jiandgyu.jimechu.controller.form.MenuForm;
 import jiandgyu.jimechu.domain.Menu;
 import jiandgyu.jimechu.service.MenuService;

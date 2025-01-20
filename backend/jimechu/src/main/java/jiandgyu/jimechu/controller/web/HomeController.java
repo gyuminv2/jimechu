@@ -1,4 +1,4 @@
-package jiandgyu.jimechu.controller;
+package jiandgyu.jimechu.controller.web;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Controller;

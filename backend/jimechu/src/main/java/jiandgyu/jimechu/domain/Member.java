@@ -17,6 +17,11 @@ public class Member {
 
     private String nickname;
 
+    private String password;
+
     @OneToMany(mappedBy = "member")
     private List<Topic> topics;
+
+    @OneToMany(mappedBy = "member")
+    private List<MemberRole> memberRoles;
 }

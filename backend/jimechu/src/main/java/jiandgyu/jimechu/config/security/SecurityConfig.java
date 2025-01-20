@@ -1,4 +1,4 @@
-package jiandgyu.config.authority;
+package jiandgyu.jimechu.config.security;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -19,24 +19,25 @@ public class SecurityConfig {
     private final JwtTokenProvider jwtTokenProvider;
 
     @Bean
+    public BCryptPasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
+
+    @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.httpBasic(AbstractHttpConfigurer::disable)
                 .csrf(AbstractHttpConfigurer::disable)
                 .sessionManagement(sessionManagement
                 -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/api/member/join", "/api/member/login").anonymous()
-                        .requestMatchers("/api/member/**").hasRole("Member")
+                        .requestMatchers("/api/members/new", "/api/members/login").permitAll()
+//                        .requestMatchers("/api/members/**").hasRole("Member")
                         .anyRequest().permitAll()
-                ).addFilterBefore(
+                )
+                .addFilterBefore(
                         new JwtAuthenticationFilter(jwtTokenProvider),
                 UsernamePasswordAuthenticationFilter.class
                 );
         return http.build();
-    }
-
-    @Bean
-    public BCryptPasswordEncoder passwordEncoder() {
-        return new BCryptPasswordEncoder();
     }
 }

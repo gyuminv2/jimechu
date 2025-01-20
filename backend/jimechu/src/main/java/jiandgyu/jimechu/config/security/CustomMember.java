@@ -1,4 +1,4 @@
-package jiandgyu.config.authority;
+package jiandgyu.jimechu.config.security;
 
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -10,9 +10,6 @@ import java.util.Collection;
 public class CustomMember extends User {
 
     private Long memberId;
-    private String memberName;
-    private String password;
-    private Collection<GrantedAuthority> authorities;
 
     public CustomMember(Long memberId, String username, String password, Collection<? extends GrantedAuthority> authorities) {
         super(username, password, authorities);

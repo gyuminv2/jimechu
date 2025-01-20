@@ -1,4 +1,4 @@
-package jiandgyu.config.authority;
+package jiandgyu.jimechu.config.security;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
@@ -103,7 +103,6 @@ public class JwtTokenProvider {
             }
         }
     }
-
 
     private Claims getClaims(String jwt) {
         return Jwts.parser()

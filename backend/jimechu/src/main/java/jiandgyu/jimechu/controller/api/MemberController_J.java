@@ -1,9 +1,10 @@
-package jiandgyu.jimechu.api;
+package jiandgyu.jimechu.controller.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jiandgyu.jimechu.domain.Member;
 import jiandgyu.jimechu.domain.Topic;
+import jiandgyu.jimechu.dto.LoginRequestDTO;
 import jiandgyu.jimechu.dto.MemberCreateDTO;
 import jiandgyu.jimechu.dto.MemberDTO;
 import jiandgyu.jimechu.dto.TopicDTO;
@@ -28,7 +29,7 @@ public class MemberController_J {
     /**
      * 회원 가입 폼 (JSON 요청 처리)
      */
-    @GetMapping(value = "new", produces = "application/json")
+    @GetMapping(value = "news", produces = "application/json")
     @Operation(summary = "회원 가입 DTO", description = "회원 가입 DTO을 반환합니다.")
     public MemberCreateDTO createDTO() {
         return new MemberCreateDTO();
@@ -42,10 +43,24 @@ public class MemberController_J {
     public Map<String, String> createMember(@RequestBody MemberCreateDTO memberCreateDto) {
         Member member = new Member();
         member.setNickname(memberCreateDto.getNickname());
+        member.setPassword(memberCreateDto.getPassword());
         memberService.join(member);
 
         Map<String, String> response = new HashMap<>();
         response.put("message", "회원 생성 성공!");
+        return response;
+    }
+
+    /**
+     * Member 로그인 (JSON 요청 처리)
+     */
+    @PostMapping(value = "login", consumes = "application/json", produces = "application/json")
+    @Operation(summary = "회원 로그인", description = "회원으로 로그인합니다.")
+    public Map<String, String> login(@RequestBody LoginRequestDTO requestDTO) {
+        memberService.login(requestDTO);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "로그인 성공");
         return response;
     }
 

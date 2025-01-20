@@ -1,4 +1,4 @@
-package jiandgyu.config.authority;
+package jiandgyu.jimechu.config.security;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.JwtException;
@@ -43,7 +43,7 @@ public class JwtAuthenticationFilter extends GenericFilter {
 
     private String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
-        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bears")) {
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer")) {
             return bearerToken.substring(7);
         }
         return null;
