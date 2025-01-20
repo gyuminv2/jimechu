@@ -81,7 +81,7 @@ public class InitDataService {
     }
 
     /**
-     * 특정 배열(List<String>)을 하나의 Topic 아래 Menu들로 저장
+     * 하나의 Topic 아래 Menu들로 저장
      */
     private void saveMenusAsTopic(String topicName, List<String> menuNames, Member owner) {
         // Topic 생성

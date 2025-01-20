@@ -1,30 +1,26 @@
 spring:
   datasource:
-#    url: jdbc:postgresql://localhost:5432/jimechu
+    #    url: jdbc:postgresql://localhost:5432/jimechu
     url: jdbc:postgresql://${RDS_HOSTNAME:localhost}:${RDS_PORT:5432}/${RDS_DB_NAME:jimechu}
     username: ${RDS_USERNAME:jimechuuser}
     password: ${RDS_PASSWORD:postgres}
-#    driver-class-name: org.h2.Driver
+    #    driver-class-name: org.h2.Driver
     driver-class-name: org.postgresql.Driver
 
   jpa:
     hibernate:
       ddl-auto: create
-#      ddl-auto: update
+    #      ddl-auto: update
     properties:
       hibernate:
         show_sql: true
-#        format_sql: true
+  #        format_sql: true
 
   security:
     user:
       password: test
     filter:
       order: 10
-
-  sql:
-    init:
-      mode: always
 
 logging.level:
   org.hibernate.SQL: debug
