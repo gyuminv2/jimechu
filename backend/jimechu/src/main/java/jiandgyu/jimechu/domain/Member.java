@@ -20,8 +20,8 @@ public class Member {
     private String password;
 
     @OneToMany(mappedBy = "member")
-    private List<Topic> topics;
+    private List<Topic> topics = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")
-    private List<MemberRole> memberRoles;
+    private List<MemberRole> memberRoles = new ArrayList<>();
 }

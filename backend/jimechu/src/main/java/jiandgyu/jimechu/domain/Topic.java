@@ -3,6 +3,8 @@ package jiandgyu.jimechu.domain;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -20,7 +22,7 @@ public class Topic {
     private Member member;
 
     @OneToMany(mappedBy = "topic")
-    private List<Menu> menus;
+    private List<Menu> menus = new ArrayList<>();
 
     //==연관관계 메서드==//
     public void setMember(Member member) {

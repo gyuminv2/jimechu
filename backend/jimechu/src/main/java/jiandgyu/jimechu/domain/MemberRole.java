@@ -26,4 +26,10 @@ public class MemberRole {
         this.role = role;
         this.member = member;
     }
+
+    //==연관관계 메서드==//
+    public void setMember(Member member) {
+        this.member = member;
+        member.getMemberRoles().add(this);
+    }
 }
