@@ -39,6 +39,15 @@ public class MenuRepository {
                 .getResultList();
     }
 
+    /**
+     * 특정 TopicID에 해당하는 Menus 삭제
+     */
+    public void deleteByTopicId(Long topicId) {
+        em.createQuery("delete from Menu m where m.topic.id = :topicId")
+                .setParameter("topicId", topicId)
+                .executeUpdate();
+    }
+
     public void delete(Long menuId) {
         // 삭제할 메뉴 조회
         Menu menu = em.find(Menu.class, menuId);

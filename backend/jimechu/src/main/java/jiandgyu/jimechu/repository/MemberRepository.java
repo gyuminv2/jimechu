@@ -59,15 +59,4 @@ public class MemberRepository {
                 .setParameter("memberId", memberId)
                 .getResultList();
     }
-
-    /**
-     * 특정 TopicID에 해당하는 Menus 삭제
-     */
-    public void deleteByTopicId(Long topicId) {
-        em.createQuery("delete from Menu m where m.topic.id = :topicId")
-                .setParameter("topicId", topicId)
-                .executeUpdate();
-    }
-
-
 }

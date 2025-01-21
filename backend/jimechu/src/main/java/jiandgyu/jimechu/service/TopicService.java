@@ -4,6 +4,7 @@ import jiandgyu.jimechu.domain.Member;
 import jiandgyu.jimechu.domain.Menu;
 import jiandgyu.jimechu.domain.Topic;
 import jiandgyu.jimechu.repository.MemberRepository;
+import jiandgyu.jimechu.repository.MenuRepository;
 import jiandgyu.jimechu.repository.TopicRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ public class TopicService {
 
     private final TopicRepository topicRepository;
     private final MemberRepository memberRepository;
+    private final MenuRepository menuRepository;
 
     /**
      * Topic 생성
@@ -68,10 +70,10 @@ public class TopicService {
     public String getTopicTitleById(Long topicId) {
         return topicRepository.findOne(topicId).getTitle();
     }
-    
+
     @Transactional
     public void deleteTopicAndMenus(Long topicId) {
-        memberRepository.deleteByTopicId(topicId);
+        menuRepository.deleteByTopicId(topicId);
         topicRepository.delete(topicId);
     }
 }

@@ -71,4 +71,8 @@ public class MenuService {
     public void deleteMenu(Long menuId) {
         menuRepository.delete(menuId);
     }
+
+    public String getMenuNameById(Long menuId) {
+        return menuRepository.findOne(menuId).getName();
+    }
 }

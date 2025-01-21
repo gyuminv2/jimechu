@@ -68,13 +68,13 @@ public class MenuController_J {
     @DeleteMapping(value = "{menuId}", produces = "application/json")
     @Operation(summary = "Menu 삭제", description = "특정 Menu를 삭제합니다.")
     public Map<String, String> deleteMenu(@PathVariable Long menuId) {
+        String deletedMenuName = menuService.getMenuNameById(menuId);
         menuService.deleteMenu(menuId);
 
         // 응답 메시지 작성
         Map<String, String> response = new HashMap<>();
         response.put("message", "Menu 삭제 성공!");
-//        response.put("menuId", String.valueOf(menuId));
+        response.put("deletedMenuName", deletedMenuName);
         return response;
     }
-
 }
