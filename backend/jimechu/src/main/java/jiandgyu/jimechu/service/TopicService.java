@@ -64,4 +64,14 @@ public class TopicService {
     public void deleteTopic(Long topicId) {
         topicRepository.delete(topicId);
     }
+
+    public String getTopicTitleById(Long topicId) {
+        return topicRepository.findOne(topicId).getTitle();
+    }
+    
+    @Transactional
+    public void deleteTopicAndMenus(Long topicId) {
+        memberRepository.deleteByTopicId(topicId);
+        topicRepository.delete(topicId);
+    }
 }

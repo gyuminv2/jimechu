@@ -37,5 +37,5 @@ springdoc:
     path: /api-docs
 
 jwt:
-  expiration_time: 86400000 #1일
-  secret: Nlrb9F775ImlbjellXgxmGrgran60crFCeTvIjAJ3G1rfePs0XY22aq0MJ9WU9lyLoqeORjNcQlxgFuIalfq4w==
+  secret-key: Nlrb9F775ImlbjellXgxmGrgran60crFCeTvIjAJ3G1rfePs0XY22aq0MJ9WU9lyLoqeORjNcQlxgFuIalfq4w==
+  expiration-time: 86400000 #1일

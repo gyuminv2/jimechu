@@ -84,14 +84,15 @@ public class TopicController_J {
      * 특정 Topic 삭제 (JSON 요청 처리)
      */
     @DeleteMapping(value = "{topicId}", produces = "application/json")
-    @Operation(summary = "Topic 삭제", description = "특정 Topic을 삭제합니다.")
+    @Operation(summary = "Topic 삭제", description = "특정 Topic과 Menus를 모두 삭제합니다.")
     public Map<String, String> deleteTopic(@PathVariable Long topicId) {
-        topicService.deleteTopic(topicId);
 
-        // 응답 메시지 작성
+        String deletedTopicTitle = topicService.getTopicTitleById(topicId);
+        topicService.deleteTopicAndMenus(topicId);
+
         Map<String, String> response = new HashMap<>();
         response.put("message", "Topic 삭제 성공!");
+        response.put("deletedTopicTitle", deletedTopicTitle);
         return response;
     }
-
 }
