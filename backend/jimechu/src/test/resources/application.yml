@@ -14,7 +14,19 @@ spring:
 #        # show_sql: true
 #        format_sql: true
 
+  security:
+    user:
+      password: test
+    filter:
+      order: 10
+
+
 logging.level:
   level:
     org.hibernate.SQL: debug
     org.hibernate.orm.jdbc.bind: trace #스프링 부트 3.x, hibernate6
+
+
+jwt:
+  secret-key: Nlrb9F775ImlbjellXgxmGrgran60crFCeTvIjAJ3G1rfePs0XY22aq0MJ9WU9lyLoqeORjNcQlxgFuIalfq4w==
+  expiration-time: 86400000 #1일

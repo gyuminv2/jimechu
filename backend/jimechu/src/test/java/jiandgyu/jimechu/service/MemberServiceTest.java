@@ -21,26 +21,46 @@ public class MemberServiceTest {
 
     @Test
     public void 회원가입() throws Exception {
-        Member member = new Member();
-        member.setNickname("지나");
+        Member member = getMember();
 
         Long saveId = memberService.join(member);
 
         assertEquals(member, memberRepository.findOne(saveId));
     }
 
-    // 일단은 중복 가능하도록
-//    @Test(expected = IllegalStateException.class)
-//    public void 중복_회원_예외() throws Exception {
-//        Member member1 = new Member();
-//        Member member2 = new Member();
-//
-//        member1.setNickname("지나");
-//        member2.setNickname("지나");
-//
-//        memberService.join(member1);
-//        memberService.join(member2);
-//
-//        fail("예외 발생 (중복 닉네임 사용)");
-//    }
+    private static Member getMember() {
+        Member member = new Member();
+        member.setNickname("지나");
+        member.setPassword("지나123");
+        return member;
+    }
+
+    @Test(expected = IllegalStateException.class)
+    public void 중복_회원_예외() throws Exception {
+        Member member1 = getMember();
+        Member member2 = new Member();
+
+        member2.setNickname("지나"); member2.setPassword("지나321");
+
+        memberService.join(member1);
+        memberService.join(member2);
+
+        fail("예외 발생 (중복 닉네임 사용)");
+    }
+
+    @Test
+    public void login() {
+    }
+
+    @Test
+    public void findMembers() {
+    }
+
+    @Test
+    public void findOne() {
+    }
+
+    @Test
+    public void getTopicsByMember() {
+    }
 }

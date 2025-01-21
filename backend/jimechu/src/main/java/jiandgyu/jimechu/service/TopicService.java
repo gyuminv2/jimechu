@@ -61,7 +61,7 @@ public class TopicService {
 
 
     /**
-     * topic 삭제 ... 구현하려면 topic이 삭제되면 얘와 연관된 menu들도 전부 삭제되어야함...
+     * topic 삭제
      */
     public void deleteTopic(Long topicId) {
         topicRepository.delete(topicId);
