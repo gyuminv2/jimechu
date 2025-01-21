@@ -2,12 +2,10 @@ package jiandgyu.jimechu.controller.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jiandgyu.jimechu.config.security.TokenInfo;
 import jiandgyu.jimechu.domain.Member;
 import jiandgyu.jimechu.domain.Topic;
-import jiandgyu.jimechu.dto.LoginRequestDTO;
-import jiandgyu.jimechu.dto.MemberCreateDTO;
-import jiandgyu.jimechu.dto.MemberDTO;
-import jiandgyu.jimechu.dto.TopicDTO;
+import jiandgyu.jimechu.dto.*;
 import jiandgyu.jimechu.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -56,12 +54,14 @@ public class MemberController_J {
      */
     @PostMapping(value = "login", consumes = "application/json", produces = "application/json")
     @Operation(summary = "회원 로그인", description = "회원으로 로그인합니다.")
-    public Map<String, String> login(@RequestBody LoginRequestDTO requestDTO) {
-        memberService.login(requestDTO);
+    public LoginResponseDTO login(@RequestBody LoginRequestDTO requestDTO) {
+        TokenInfo tokenInfo = memberService.login(requestDTO);
 
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "로그인 성공");
-        return response;
+        LoginResponseDTO responseDTO = new LoginResponseDTO();
+        responseDTO.setToken(tokenInfo.getAccessToken());
+        responseDTO.setNickname(requestDTO.getNickname());
+
+        return responseDTO;
     }
 
     /**

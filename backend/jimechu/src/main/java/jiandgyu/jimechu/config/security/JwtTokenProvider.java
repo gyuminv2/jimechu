@@ -24,10 +24,12 @@ import java.util.stream.Collectors;
 public class JwtTokenProvider {
 
     private final String secretKey;
-    private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 24; // 1일
+    private final long jwtExpiration;
 
-    public JwtTokenProvider(@Value("${jwt.secret}") String secretKey) {
+    public JwtTokenProvider(@Value("${jwt.secret}") String secretKey,
+                            @Value("${jwt.expiration_time}") Long jwtExpiration) {
         this.secretKey = secretKey;
+        this.jwtExpiration = jwtExpiration;
     }
 
     public SecretKey getKey() {
@@ -41,7 +43,7 @@ public class JwtTokenProvider {
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
         Date now = new Date();
-        Date accessExpiration = new Date(now.getTime() + EXPIRATION_TIME);
+        Date accessExpiration = new Date(now.getTime() + jwtExpiration);
 
         String jwt = Jwts.builder()
                 .subject(authentication.getName())

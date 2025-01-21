@@ -1,4 +1,4 @@
-package jiandgyu.jimechu.service;
+package jiandgyu.jimechu.config.security;
 
 import jiandgyu.jimechu.config.security.CustomMember;
 import jiandgyu.jimechu.domain.Member;
@@ -18,7 +18,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
-public class CustomUserDetailService implements UserDetailsService {
+class CustomUserDetailService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
 

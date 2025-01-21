@@ -31,6 +31,7 @@ public class MemberService {
 
     private final BCryptPasswordEncoder passwordEncoder;
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
+
     private final JwtTokenProvider jwtTokenProvider;
 
     /**
@@ -44,7 +45,7 @@ public class MemberService {
         String encodePassword = passwordEncoder.encode(member.getPassword());
         member.setPassword(encodePassword);
         memberRepository.save(member);
-        // 역할 설정
+        // Role 설정
         MemberRole memberRole = MemberRole.builder()
                 .role(Role.MEMBER)
                 .member(member)
@@ -66,20 +67,8 @@ public class MemberService {
     /**
      * 로그인
      */
-//    @Transactional // readOnly 적용 X
-//    public TokenInfo login(LoginRequestDTO requestDTO) {
-//
-//        UsernamePasswordAuthenticationToken authenticationToken = new
-//                UsernamePasswordAuthenticationToken(requestDTO.getNickname(), requestDTO.getPassword());
-//
-//        Authentication authentication = authenticationManagerBuilder.getObject().authenticate(authenticationToken);
-//
-//        return jwtTokenProvider.createToken(authentication);
-//    }
-
     @Transactional
     public TokenInfo login(LoginRequestDTO requestDTO) {
-        // 1) Log the incoming request
         log.debug("login() called with nickname: {}, password: {}",
                 requestDTO.getNickname(), requestDTO.getPassword());
 

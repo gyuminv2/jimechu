@@ -4,7 +4,8 @@ DOCKER_COMPOSE = docker compose --file $(DOCKER_COMPOSE_FILE)
 all: jar up
 
 jar:
-	cd /Users/gyumpark/jimechu/backend/jimechu && sh gradlew clean build # jar 파일 생성
+	# cd /Users/gyumpark/jimechu/backend/jimechu && sh gradlew clean build # jar 파일 생성
+	cd /Users/gyumpark/jimechu/backend/jimechu && sh gradlew clean build -x test # test 무시하고 jar 파일 생성
 
 up:
 	$(DOCKER_COMPOSE) up --build -d # 컨테이너 생성

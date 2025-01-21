@@ -11,12 +11,8 @@ public class InitDataLoader implements CommandLineRunner {
 
     private final InitDataService initDataService;
 
-    /**
-     * CommandLineRunner
-     */
     @Override
     public void run(String... args) {
         initDataService.initData();
     }
 }
-
