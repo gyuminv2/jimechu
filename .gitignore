@@ -1,1 +1,30 @@
 .DS_Store
+
+# 빌드 디렉토리
+/build/
+!*/src/main/resources/**
+
+# Gradle 파일 제외
+/out/
+.gradle/
+.gradle-cache/
+gradle/
+!gradle-wrapper.jar
+
+# IDE 관련 파일
+*.iml
+.idea/
+.vscode/
+*.log
+
+# 민감한 환경 변수 및 설정 파일
+**/application.yml
+**/application-*.yml
+
+# Docker 관련 파일
+Dockerfile
+*.env
+docker-compose.yml
+
+# Test 결과 제외
+/test-results/
