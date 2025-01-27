@@ -34,7 +34,7 @@ logging.level:
 # Swagger
 springdoc:
   api-docs:
-    path: /api-docs
+    path: /api
 
 jwt:
   secret-key: Nlrb9F775ImlbjellXgxmGrgran60crFCeTvIjAJ3G1rfePs0XY22aq0MJ9WU9lyLoqeORjNcQlxgFuIalfq4w==

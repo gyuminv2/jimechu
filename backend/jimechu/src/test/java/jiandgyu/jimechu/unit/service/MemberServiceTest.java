@@ -6,7 +6,6 @@ import jiandgyu.jimechu.domain.Member;
 import jiandgyu.jimechu.domain.MemberRole;
 import jiandgyu.jimechu.domain.Topic;
 import jiandgyu.jimechu.dto.LoginRequestDTO;
-import jiandgyu.jimechu.dto.TopicCreateDTO;
 import jiandgyu.jimechu.repository.MemberRepository;
 import jiandgyu.jimechu.repository.MemberRoleRepository;
 import jiandgyu.jimechu.service.MemberService;

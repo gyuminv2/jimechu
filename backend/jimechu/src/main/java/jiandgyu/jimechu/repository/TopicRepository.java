@@ -14,8 +14,9 @@ public class TopicRepository {
 
     private final EntityManager em;
 
-    public void save(Topic topic) {
+    public Topic save(Topic topic) {
         em.persist(topic);
+        return topic;
     }
 
     public Topic findOne(Long id) {
