@@ -55,7 +55,7 @@ public class MemberRepository {
     /**
      * Topic 조회
      */
-    public List<Topic> findAllByMemberId(Long memberId) {
+    public List<Topic> findTopicsByMemberId(Long memberId) {
         return em.createQuery("select t from Topic t where t.member.id = :memberId", Topic.class)
                 .setParameter("memberId", memberId)
                 .getResultList();

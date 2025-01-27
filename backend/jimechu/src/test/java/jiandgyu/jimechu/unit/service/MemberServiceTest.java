@@ -4,7 +4,9 @@ import jiandgyu.jimechu.config.security.JwtTokenProvider;
 import jiandgyu.jimechu.config.security.TokenInfo;
 import jiandgyu.jimechu.domain.Member;
 import jiandgyu.jimechu.domain.MemberRole;
+import jiandgyu.jimechu.domain.Topic;
 import jiandgyu.jimechu.dto.LoginRequestDTO;
+import jiandgyu.jimechu.dto.TopicCreateDTO;
 import jiandgyu.jimechu.repository.MemberRepository;
 import jiandgyu.jimechu.repository.MemberRoleRepository;
 import jiandgyu.jimechu.service.MemberService;
@@ -14,7 +16,6 @@ import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -28,7 +29,6 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 import static org.mockito.internal.verification.VerificationModeFactory.times;
 
-//@SpringBootTest
 @Transactional
 class MemberServiceTest {
 
@@ -60,7 +60,6 @@ class MemberServiceTest {
             savedMember.setId(1L);
             return savedMember;
         });
-
         // Mock : Role 저장
         when(memberRoleRepository.save(any(MemberRole.class))).thenReturn(null);
 
@@ -145,11 +144,31 @@ class MemberServiceTest {
         verify(jwtTokenProvider, never()).createToken(any(Authentication.class));
     }
 
+    @Test
+    public void 저장된_토픽_조회() {
+        // given
+        Member member = getMember();
+
+        Topic topic = new Topic();
+        topic.setMember(member);
+        topic.setTitle("지메추");
+        when(memberRepository.findTopicsByMemberId(1L)).thenReturn(List.of(topic));
+
+        // when
+        List<Topic> topics = memberService.getTopicsByMember(1L);
+
+        // then
+        assertNotNull(topics);
+        assertEquals(1, topics.size());
+        assertEquals("지메추", topics.get(0).getTitle());
+    }
+
 
 
 
     private static Member getMember() {
         Member member = new Member();
+        member.setId(1L);
         member.setNickname("지나");
         member.setPassword("지나123");
         return member;
