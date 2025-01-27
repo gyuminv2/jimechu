@@ -49,25 +49,12 @@ public class MenuController_J {
                 .collect(Collectors.toList());
     }
 
-//    /**
-//     * 특정 Topic의 menus 조회 (JSON 요청 처리)
-//     */
-//    @GetMapping(value = "/topics/{topicId}/menus", produces = "application/json")
-//    @Operation(summary = "특정 Topic의 Menus 조회", description = "특정 Topic의 Menu 목록을 반환합니다.")
-//    public List<MenuDTO> getMenusByTopic(@PathVariable Long topicId) {
-//        List<Menu> menus = menuService.findMenusByTopic(topicId);
-//
-//        return menus.stream()
-//                .map(MenuDTO::new)
-//                .collect(Collectors.toList());
-//    }
-
     /**
      * 특정 Menu 삭제 (JSON 요청 처리)
      */
     @DeleteMapping(value = "{menuId}", produces = "application/json")
     @Operation(summary = "Menu 삭제", description = "특정 Menu를 삭제합니다.")
-    public Map<String, String> deleteMenu(@PathVariable Long menuId) {
+    public Map<String, String> deleteMenu(@PathVariable("menuId") Long menuId) {
         String deletedMenuName = menuService.getMenuNameById(menuId);
         menuService.deleteMenu(menuId);
 

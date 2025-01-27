@@ -1,6 +1,7 @@
 package jiandgyu.jimechu.controller.api;
 
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jiandgyu.jimechu.config.security.TokenInfo;
 import jiandgyu.jimechu.domain.Member;
@@ -82,7 +83,7 @@ public class MemberController_J {
      */
     @GetMapping(value = "{memberId}", produces = "application/json")
     @Operation(summary = "특정 회원 조회", description = "회원을 조회합니다.")
-    public MemberDTO getMember(@PathVariable Long memberId) {
+    public MemberDTO getMember(@PathVariable("memberId") Long memberId) {
         Member member = memberService.findOne(memberId);
         return new MemberDTO(member);
     }
@@ -90,10 +91,9 @@ public class MemberController_J {
     /**
      * 특정 Member의 Topics 조회 (JSON 요청 처리)
      */
-    @GetMapping(value = "{memberId}/topics", produces = "application/json")
-    @ResponseBody
+    @GetMapping(value = "/{memberId}/topics", produces = "application/json")
     @Operation(summary = "특정 멤버의 Topic 조회", description = "특정 맴버가 생성한 Topic 목록을 반환합니다.")
-    public List<TopicDTO> getTopicsByMember(@PathVariable Long memberId) {
+    public List<TopicDTO> getTopicsByMember(@PathVariable("memberId") Long memberId) {
         List<Topic> topics = memberService.getTopicsByMember(memberId);
         List<TopicDTO> topicDTOs = new ArrayList<>();
 

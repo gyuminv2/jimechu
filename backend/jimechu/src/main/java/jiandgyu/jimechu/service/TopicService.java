@@ -56,9 +56,12 @@ public class TopicService {
     }
 
     /**
-     * topic update도 있어야할듯 (title 바꾸기, menu 추가, menu 삭제)
+     * topic update (title 바꾸기)
      */
-
+    @Transactional
+    public void updateTopicTitle(Long topicId, String title) {
+        topicRepository.update(topicId, title);
+    }
 
     /**
      * topic 삭제

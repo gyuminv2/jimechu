@@ -47,7 +47,17 @@ public class TopicRepository {
     }
 
     /**
-     * Topic 삭제.. 구현하려면 topic이 삭제되면 얘와 연관된 menu들도 전부 삭제되어야함...
+     * Topic update (title 바꾸기)
+     */
+    public void update(Long topicId, String title) {
+        Topic topic = findOne(topicId);
+        if (topic != null) {
+            topic.setTitle(title);
+        }
+    }
+
+    /**
+     * Topic 삭제, topic이 삭제되면 얘와 연관된 menu들도 전부 삭제
      */
     public void delete(Long topicId) {
         Topic topic = findOne(topicId);

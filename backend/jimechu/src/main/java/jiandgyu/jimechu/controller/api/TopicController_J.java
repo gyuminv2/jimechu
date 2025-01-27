@@ -7,6 +7,7 @@ import jiandgyu.jimechu.domain.Topic;
 import jiandgyu.jimechu.dto.MenuDTO;
 import jiandgyu.jimechu.dto.TopicCreateDTO;
 import jiandgyu.jimechu.dto.TopicDTO;
+import jiandgyu.jimechu.dto.TopicUpdateDTO;
 import jiandgyu.jimechu.service.MenuService;
 import jiandgyu.jimechu.service.TopicService;
 import lombok.RequiredArgsConstructor;
@@ -58,7 +59,7 @@ public class TopicController_J {
      */
     @GetMapping(value = "{topicId}/menus", produces = "application/json")
     @Operation(summary = "특정 Topic의 Menus 조회", description = "특정 Topic의 Menu 목록을 반환합니다.")
-    public List<MenuDTO> getMenusByTopic(@PathVariable Long topicId) {
+    public List<MenuDTO> getMenusByTopic(@PathVariable("topicId") Long topicId) {
         List<Menu> menus = menuService.getMenusByTopic(topicId);
 
         return menus.stream()
@@ -66,26 +67,27 @@ public class TopicController_J {
                 .collect(Collectors.toList());
     }
 
+    /**
+     * Topic Title 수정 (JSON 요청 처리)
+     */
+    @PostMapping(value = "{topicId}/updateTitle", consumes = "application/json", produces = "application/json")
+    @Operation(summary = "Topic Title 수정", description = "특정 Topic의 Title을 수정합니다.")
+    public Map<String, String> updateTopicTitle(@PathVariable("topicId") Long topicId, @RequestBody TopicUpdateDTO topicUpdateDTO) {
+        topicService.updateTopicTitle(topicId, topicUpdateDTO.getTitle());
 
-//    /**
-//     * 특정 Member의 Topics 조회 (JSON 요청 처리)
-//     */
-//    @GetMapping(value = "/members/{memberId}/topics", produces = "application/json")
-//    @Operation(summary = "특정 Member의 Topics 조회", description = "특정 Member의 Topic 목록을 반환합니다.")
-//    public List<TopicDTO> getTopicsByMember(@PathVariable Long memberId) {
-//        List<Topic> topics = topicService.findTopicsByMemberId(memberId);
-//
-//        return topics.stream()
-//                .map(TopicDTO::new)
-//                .collect(Collectors.toList());
-//    }
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Topic Title 수정 성공!");
+        response.put("editedTopicTitle", topicUpdateDTO.getTitle());
+        return response;
+    }
+
 
     /**
      * 특정 Topic 삭제 (JSON 요청 처리)
      */
     @DeleteMapping(value = "{topicId}", produces = "application/json")
     @Operation(summary = "Topic 삭제", description = "특정 Topic과 Menus를 모두 삭제합니다.")
-    public Map<String, String> deleteTopic(@PathVariable Long topicId) {
+    public Map<String, String> deleteTopic(@PathVariable("topicId") Long topicId) {
 
         String deletedTopicTitle = topicService.getTopicTitleById(topicId);
         topicService.deleteTopicAndMenus(topicId);
