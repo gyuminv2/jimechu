@@ -1,7 +1,6 @@
 package jiandgyu.jimechu.controller.api;
 
 import io.swagger.v3.oas.annotations.Operation;
-import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jiandgyu.jimechu.config.security.TokenInfo;
 import jiandgyu.jimechu.domain.Member;
@@ -21,7 +20,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Tag(name = "Member API", description = "회원 API")
 @RequestMapping("/api/members")
-public class MemberController_J {
+public class MemberController {
 
     private final MemberService memberService;
 

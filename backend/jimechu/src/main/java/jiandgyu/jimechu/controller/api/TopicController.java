@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @Tag(name = "Topic API", description = "주제 API")
 @RequestMapping("/api/topics")
-public class TopicController_J {
+public class TopicController {
 
     private final TopicService topicService;
     private final MenuService menuService;

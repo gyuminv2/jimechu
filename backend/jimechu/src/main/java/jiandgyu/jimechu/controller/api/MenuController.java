@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 @RequestMapping("/api/menus")
 @Tag(name = "Menu API", description = "메뉴 API")
-public class MenuController_J {
+public class MenuController {
 
     private final MenuService menuService;
 
