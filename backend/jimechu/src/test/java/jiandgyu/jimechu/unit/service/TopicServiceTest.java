@@ -1,8 +1,10 @@
 package jiandgyu.jimechu.unit.service;
 
 import jiandgyu.jimechu.domain.Member;
+import jiandgyu.jimechu.domain.Menu;
 import jiandgyu.jimechu.domain.Topic;
 import jiandgyu.jimechu.repository.MemberRepository;
+import jiandgyu.jimechu.repository.MenuRepository;
 import jiandgyu.jimechu.repository.TopicRepository;
 import jiandgyu.jimechu.service.MemberService;
 import jiandgyu.jimechu.service.TopicService;
@@ -20,6 +22,7 @@ import static org.mockito.Mockito.*;
 class TopicServiceTest {
 
     @Mock private MemberRepository memberRepository;
+    @Mock private MenuRepository menuRepository;
     @Mock private TopicRepository topicRepository;
     @InjectMocks private TopicService topicService;
 
@@ -29,7 +32,7 @@ class TopicServiceTest {
     }
 
     @Test
-    public void 토픽생성() {
+    public void 토픽_생성() {
         // given
         Member member = new Member();
         member.setId(1L);
@@ -60,6 +63,41 @@ class TopicServiceTest {
         assertEquals(topic.getMember().getId(), 1L);
         assertEquals(topic.getMember().getNickname(), "지나");
         assertEquals(topic.getMember().getPassword(), "지나123");
+    }
+
+    @Test
+    public void 토픽_삭제_하위메뉴_모두_삭제() {
+        // given
+        Topic topic = new Topic();
+        topic.setId(1L);
+        topic.setTitle("지메추");
+
+        Menu menu1 = new Menu();
+        menu1.setId(1L);
+        menu1.setName("메뉴1");
+        menu1.setTopic(topic);
+
+        Menu menu2 = new Menu();
+        menu2.setId(2L);
+        menu2.setName("메뉴2");
+        menu2.setTopic(topic);
+
+        topic.setMenus(List.of(menu1, menu2));
+
+        // Mock : findOne 호출 시 TopicRepository Mocking
+        when(topicRepository.findOne(1L)).thenReturn(topic);
+
+        // Mock : TopicRepository, MenuRepository Mocking
+        doNothing().when(menuRepository).deleteByTopicId(1L);
+        doNothing().when(topicRepository).delete(1L);
+
+
+        // when
+        topicService.deleteTopicAndMenus(1L);
+
+        // then
+        verify(menuRepository, times(1)).deleteByTopicId(1L);
+        verify(topicRepository, times(1)).delete(1L);
     }
 
 }
