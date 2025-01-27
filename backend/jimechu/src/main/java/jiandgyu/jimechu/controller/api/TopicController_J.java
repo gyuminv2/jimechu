@@ -70,7 +70,7 @@ public class TopicController_J {
     /**
      * Topic Title 수정 (JSON 요청 처리)
      */
-    @PostMapping(value = "{topicId}/updateTitle", consumes = "application/json", produces = "application/json")
+    @PatchMapping(value = "{topicId}", consumes = "application/json", produces = "application/json")
     @Operation(summary = "Topic Title 수정", description = "특정 Topic의 Title을 수정합니다.")
     public Map<String, String> updateTopicTitle(@PathVariable("topicId") Long topicId, @RequestBody TopicUpdateDTO topicUpdateDTO) {
         topicService.updateTopicTitle(topicId, topicUpdateDTO.getTitle());

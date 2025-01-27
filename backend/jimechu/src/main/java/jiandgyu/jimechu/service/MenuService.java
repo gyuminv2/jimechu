@@ -59,9 +59,8 @@ public class MenuService {
      * 영속성 컨텍스트가 자동 변경
      */
     @Transactional
-    public void updateMenu(Long id, String name) {
-        Menu menu = menuRepository.findOne(id);
-        menu.setName(name);
+    public void updateMenuName(Long id, String name) {
+        menuRepository.update(id, name);
     }
 
     /**

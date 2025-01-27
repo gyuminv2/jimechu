@@ -40,6 +40,16 @@ public class MenuRepository {
     }
 
     /**
+     * Menu 업데이트
+     */
+    public void update(Long id, String name) {
+        Menu menu = em.find(Menu.class, id);
+        if (menu != null) {
+            menu.setName(name);
+        }
+    }
+
+    /**
      * 특정 TopicID에 해당하는 Menus 삭제
      */
     public void deleteByTopicId(Long topicId) {

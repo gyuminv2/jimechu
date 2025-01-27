@@ -64,16 +64,15 @@ public class TopicService {
     }
 
     /**
-     * topic 삭제
+     * topicId로 topic title 조회
      */
-    public void deleteTopic(Long topicId) {
-        topicRepository.delete(topicId);
-    }
-
     public String getTopicTitleById(Long topicId) {
         return topicRepository.findOne(topicId).getTitle();
     }
 
+    /**
+     * topic 삭제, topic에 속한 menu도 삭제
+     */
     @Transactional
     public void deleteTopicAndMenus(Long topicId) {
         menuRepository.deleteByTopicId(topicId);

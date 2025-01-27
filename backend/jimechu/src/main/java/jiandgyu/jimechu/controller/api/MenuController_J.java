@@ -5,6 +5,7 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jiandgyu.jimechu.domain.Menu;
 import jiandgyu.jimechu.dto.MenuCreateDTO;
 import jiandgyu.jimechu.dto.MenuDTO;
+import jiandgyu.jimechu.dto.MenuUpdateDTO;
 import jiandgyu.jimechu.service.MenuService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
@@ -47,6 +48,20 @@ public class MenuController_J {
         return menus.stream()
                 .map(MenuDTO::new)
                 .collect(Collectors.toList());
+    }
+
+    /**
+     * Menu Name 수정 (JSON 요청 처리)
+     */
+    @PatchMapping(value = "{menuId}", consumes = "application/json", produces = "application/json")
+    @Operation(summary = "Menu Name 수정", description = "특정 Menu의 Name을 수정합니다.")
+    public Map<String, String> updateMenuName(@PathVariable("menuId") Long menuId, @RequestBody MenuUpdateDTO menuUpdateDTO) {
+        menuService.updateMenuName(menuId, menuUpdateDTO.getName());
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Menu Name 수정 성공!");
+        response.put("updatedMenuName", menuUpdateDTO.getName());
+        return response;
     }
 
     /**
