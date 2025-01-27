@@ -11,7 +11,7 @@ public class MenuDTO {
 
     public MenuDTO() {
         this.id = null;
-        this.name = "null";
+        this.name = null;
     }
 
     public MenuDTO(Menu menu) {

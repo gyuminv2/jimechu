@@ -18,8 +18,9 @@ public class MemberRepository {
      * 멤버 저장
      * @param member
      */
-    public void save(Member member) {
+    public Member save(Member member) {
         em.persist(member);
+        return member;
     }
 
     /**

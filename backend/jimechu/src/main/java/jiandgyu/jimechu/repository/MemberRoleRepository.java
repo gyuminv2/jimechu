@@ -11,7 +11,8 @@ public class MemberRoleRepository {
 
     private final EntityManager em;
 
-    public void save(MemberRole memberRole) {
+    public MemberRole save(MemberRole memberRole) {
         em.persist(memberRole);
+        return memberRole;
     }
 }
