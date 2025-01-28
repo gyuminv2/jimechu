@@ -19,7 +19,7 @@ public class Member {
 
     private String password;
 
-    @OneToMany(mappedBy = "member")
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Topic> topics = new ArrayList<>();
 
     @OneToMany(mappedBy = "member")

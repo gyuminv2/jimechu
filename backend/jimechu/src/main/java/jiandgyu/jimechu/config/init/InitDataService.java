@@ -3,6 +3,7 @@ package jiandgyu.jimechu.config.init;
 import jakarta.annotation.PostConstruct;
 import jiandgyu.jimechu.domain.*;
 import jiandgyu.jimechu.repository.MemberRepository;
+import jiandgyu.jimechu.repository.MemberRoleRepository;
 import jiandgyu.jimechu.repository.MenuRepository;
 import jiandgyu.jimechu.repository.TopicRepository;
 import lombok.RequiredArgsConstructor;
@@ -21,6 +22,7 @@ import java.util.stream.Stream;
 public class InitDataService {
 
     private final MemberRepository memberRepository;
+    private final MemberRoleRepository memberRoleRepository;
     private final TopicRepository topicRepository;
     private final MenuRepository menuRepository;
 
@@ -68,8 +70,13 @@ public class InitDataService {
         Member systemMember = new Member();
         systemMember.setNickname("jinkim2");
         systemMember.setPassword(passwordEncoder.encode("jinkim2")); // 임시 비밀번호
-        systemMember.getMemberRoles().add(MemberRole.builder().role(Role.ADMIN).member(systemMember).build());
         memberRepository.save(systemMember);
+
+        MemberRole memberRole = MemberRole.builder()
+                .role(Role.ADMIN)
+                .member(systemMember)
+                .build();
+        memberRoleRepository.save(memberRole);
 
         saveMenusAsTopic("지메추", DEFAULT_MENUS, systemMember);
         saveMenusAsTopic("지디추", DESSERTS, systemMember);
