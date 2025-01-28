@@ -18,6 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 public class SecurityConfig {
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final CustomUserDetailService userDetailsService;
 
     @Bean
     public BCryptPasswordEncoder passwordEncoder() {
@@ -31,14 +32,21 @@ public class SecurityConfig {
                 .sessionManagement(sessionManagement
                 -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> request
-                        .requestMatchers("/api/members/new", "/api/members/login").permitAll()
+                        .requestMatchers(
+                                "/api/members/new",
+                                "/api/members/login",
+                                "/swagger-ui/**",
+                                "/api-docs/**")
+                                .permitAll()
 //                        .requestMatchers("/api/members/**").hasRole("Member")
-                        .anyRequest().permitAll()
+                        .anyRequest().authenticated()
+//                        .anyRequest().permitAll()
                 )
                 .addFilterBefore(
                         new JwtAuthenticationFilter(jwtTokenProvider),
                 UsernamePasswordAuthenticationFilter.class
-                );
+                )
+                .userDetailsService(userDetailsService);
         return http.build();
     }
 }

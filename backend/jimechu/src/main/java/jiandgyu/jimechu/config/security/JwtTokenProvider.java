@@ -42,6 +42,7 @@ public class JwtTokenProvider {
     public TokenInfo createToken(Authentication authentication) {
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
+
         Date now = new Date();
         Date accessExpiration = new Date(now.getTime() + jwtExpiration);
 
@@ -71,6 +72,7 @@ public class JwtTokenProvider {
                 .map(SimpleGrantedAuthority::new)
                 .collect(Collectors.toList());
 
+        // 보안상 비밀번호는 비워둠
         UserDetails principal = new CustomMember(memberId, claims.getSubject(), "", authorities);
 
         return new UsernamePasswordAuthenticationToken(principal, "", authorities);
@@ -83,26 +85,12 @@ public class JwtTokenProvider {
         try {
             getClaims(token);
             return true;
-        } catch (Exception e) {
-            if (e instanceof SecurityException) {
-                log.debug("[SecurityException] 잘못된 토큰");
-                throw new JwtException("[SecurityException] 잘못된 토큰 입니다.");
-            } else if (e instanceof MalformedJwtException) {
-                log.debug("[MalformedJwtException] 잘못된 토큰");
-                throw new JwtException("[MalformedJwtException] 잘못된 토큰 입니다.");
-            } else if (e instanceof ExpiredJwtException) {
-                log.debug("[ExpiredJwtException] 잘못된 토큰");
-                throw new JwtException("[ExpiredJwtException] 잘못된 토큰 입니다.");
-            } else if (e instanceof UnsupportedJwtException) {
-                log.debug("[UnsupportedJwtException] 잘못된 토큰");
-                throw new JwtException("[UnsupportedJwtException] 잘못된 토큰 입니다.");
-            } else if (e instanceof IllegalArgumentException) {
-                log.debug("[IllegalArgumentException] 잘못된 토큰");
-                throw new JwtException("[IllegalArgumentException] 잘못된 토큰 입니다.");
-            } else {
-                log.debug("[토큰검증 오류] 잘못된 토큰");
-                throw new JwtException("[토큰검증 오류] 잘못된 토큰 입니다.");
-            }
+        } catch (SecurityException | MalformedJwtException |UnsupportedJwtException | IllegalArgumentException e) {
+                log.debug("[잘못된 토큰] " + e.getMessage());
+                throw new JwtException("[잘못된 토큰] " + e.getMessage());
+        } catch (ExpiredJwtException e) {
+            log.debug("[만료된 토큰] " + e.getMessage());
+            throw new JwtException("[만료된 토큰] " + e.getMessage());
         }
     }
 

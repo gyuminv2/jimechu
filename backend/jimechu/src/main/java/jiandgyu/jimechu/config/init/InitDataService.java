@@ -1,9 +1,7 @@
 package jiandgyu.jimechu.config.init;
 
 import jakarta.annotation.PostConstruct;
-import jiandgyu.jimechu.domain.Member;
-import jiandgyu.jimechu.domain.Menu;
-import jiandgyu.jimechu.domain.Topic;
+import jiandgyu.jimechu.domain.*;
 import jiandgyu.jimechu.repository.MemberRepository;
 import jiandgyu.jimechu.repository.MenuRepository;
 import jiandgyu.jimechu.repository.TopicRepository;
@@ -70,6 +68,7 @@ public class InitDataService {
         Member systemMember = new Member();
         systemMember.setNickname("jinkim2");
         systemMember.setPassword(passwordEncoder.encode("jinkim2")); // 임시 비밀번호
+        systemMember.getMemberRoles().add(MemberRole.builder().role(Role.ADMIN).member(systemMember).build());
         memberRepository.save(systemMember);
 
         saveMenusAsTopic("지메추", DEFAULT_MENUS, systemMember);

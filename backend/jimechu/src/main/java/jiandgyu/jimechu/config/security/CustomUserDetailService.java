@@ -3,6 +3,7 @@ package jiandgyu.jimechu.config.security;
 import jiandgyu.jimechu.config.security.CustomMember;
 import jiandgyu.jimechu.domain.Member;
 import jiandgyu.jimechu.repository.MemberRepository;
+import jiandgyu.jimechu.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -45,6 +46,7 @@ class CustomUserDetailService implements UserDetailsService {
     private UserDetails createUserDetails(Member member) {
         log.debug("Creating UserDetails for member: {}", member);
         List<SimpleGrantedAuthority> authorities = member.getMemberRoles().stream()
+                // ROLE_MEMBER 권한 부여
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getRole()))
                 .toList();
         log.debug("authorities : {}", authorities);

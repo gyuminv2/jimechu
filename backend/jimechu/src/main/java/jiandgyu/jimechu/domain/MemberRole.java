@@ -14,6 +14,7 @@ public class MemberRole {
     @Column(name = "memberRole_id")
     private Long id;
 
+    @Enumerated(EnumType.STRING)
     private Role role;
 
     @ManyToOne(fetch = FetchType.LAZY)

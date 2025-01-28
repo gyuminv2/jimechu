@@ -2,12 +2,14 @@ package jiandgyu.jimechu.controller.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jiandgyu.jimechu.config.security.CustomMember;
 import jiandgyu.jimechu.config.security.TokenInfo;
 import jiandgyu.jimechu.domain.Member;
 import jiandgyu.jimechu.domain.Topic;
 import jiandgyu.jimechu.dto.*;
 import jiandgyu.jimechu.service.MemberService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -62,6 +64,31 @@ public class MemberController {
         responseDTO.setNickname(requestDTO.getNickname());
 
         return responseDTO;
+    }
+
+//    /**
+//     * Member 로그아웃 (JSON 요청 처리)
+//     */
+//    @PostMapping(value = "logout", consumes = "application/json", produces = "application/json")
+//    @Operation(summary = "회원 로그아웃", description = "로그아웃합니다.")
+//    public Map<String, String> logout(@RequestHeader("Authorization") String token) {
+//        String accessToken = token.replace("Bearer ", "");
+//        memberService.logout(accessToken);
+//
+//        Map<String, String> response = new HashMap<>();
+//        response.put("message", "로그아웃 성공!");
+//        return response;
+//    }
+
+    /**
+     * 내 정보 (JSON 요청 처리)
+     */
+    @GetMapping(value = "/me", produces = "application/json")
+    @Operation(summary = "내 정보", description = "현재 로그인한 나의 정보를 반환합니다.")
+    public MemberDTO getCurrentUser(@AuthenticationPrincipal CustomMember customMember) {
+        Long memberId = customMember.getMemberId();
+        Member member = memberService.findOne(memberId);
+        return new MemberDTO(member);
     }
 
     /**

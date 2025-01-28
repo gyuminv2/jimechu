@@ -93,6 +93,15 @@ public class MemberService {
         return tokenInfo;
     }
 
+//    /**
+//     * 로그아웃
+//     */
+//    @Transactional
+//    public void logout(String accessToken) {
+//        if (accessToken == null || accessToken.isEmpty()) {
+//            throw new IllegalArgumentException("유효하지 않은 토큰입니다.");
+//        }
+//    }
 
     /**
      * 전체 회원 조회
@@ -109,6 +118,15 @@ public class MemberService {
      */
     public Member findOne(Long memberId) {
         return memberRepository.findOne(memberId);
+    }
+
+    /**
+     * 닉네임으로 회원 조회
+     * @param nickname
+     * @return Member
+     */
+    public List<Member> findByNickname(String nickname) {
+        return memberRepository.findByNickname(nickname);
     }
 
     /**
