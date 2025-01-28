@@ -20,7 +20,7 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "Topic API", description = "주제 API")
+@Tag(name = "C | Topic API", description = "주제 API")
 @RequestMapping("/api/topics")
 public class TopicController {
 

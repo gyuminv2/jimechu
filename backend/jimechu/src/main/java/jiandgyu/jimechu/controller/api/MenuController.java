@@ -18,7 +18,7 @@ import java.util.stream.Collectors;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/api/menus")
-@Tag(name = "Menu API", description = "메뉴 API")
+@Tag(name = "D | Menu API", description = "메뉴 API")
 public class MenuController {
 
     private final MenuService menuService;
