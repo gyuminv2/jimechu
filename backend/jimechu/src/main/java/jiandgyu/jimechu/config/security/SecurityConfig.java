@@ -33,11 +33,9 @@ public class SecurityConfig {
                 -> sessionManagement.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(
-                                "/api/members/new",
-                                "/api/members/login",
+                                "/api/auth/**",
                                 "/swagger-ui/**",
-                                "/api-docs/**")
-                                .permitAll()
+                                "/api-docs/**").permitAll()
 //                        .requestMatchers("/api/members/**").hasRole("Member")
                         .anyRequest().authenticated()
 //                        .anyRequest().permitAll()

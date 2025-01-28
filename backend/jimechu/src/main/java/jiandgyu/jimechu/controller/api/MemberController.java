@@ -20,51 +20,51 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequiredArgsConstructor
-@Tag(name = "Member API", description = "회원 API")
+@Tag(name = "B | Member API", description = "회원 API")
 @RequestMapping("/api/members")
 public class MemberController {
 
     private final MemberService memberService;
 
-    /**
-     * 회원 가입 폼 (JSON 요청 처리)
-     */
-    @GetMapping(value = "news", produces = "application/json")
-    @Operation(summary = "회원 가입 DTO", description = "회원 가입 DTO을 반환합니다.")
-    public MemberCreateDTO createDTO() {
-        return new MemberCreateDTO();
-    }
+//    /**
+//     * 회원 가입 폼 (JSON 요청 처리)
+//     */
+//    @GetMapping(value = "news", produces = "application/json")
+//    @Operation(summary = "회원 가입 DTO", description = "회원 가입 DTO을 반환합니다.")
+//    public MemberCreateDTO createDTO() {
+//        return new MemberCreateDTO();
+//    } AuthController로 이동
 
-    /**
-     * Member 생성 (JSON 요청 처리)
-     */
-    @PostMapping(value = "new", consumes = "application/json", produces = "application/json")
-    @Operation(summary = "회원 생성", description = "새로운 회원을 생성합니다.")
-    public Map<String, String> createMember(@RequestBody MemberCreateDTO memberCreateDto) {
-        Member member = new Member();
-        member.setNickname(memberCreateDto.getNickname());
-        member.setPassword(memberCreateDto.getPassword());
-        memberService.join(member);
+//    /**
+//     * Member 생성 (JSON 요청 처리)
+//     */
+//    @PostMapping(value = "new", consumes = "application/json", produces = "application/json")
+//    @Operation(summary = "회원 생성", description = "새로운 회원을 생성합니다.")
+//    public Map<String, String> createMember(@RequestBody MemberCreateDTO memberCreateDto) {
+//        Member member = new Member();
+//        member.setNickname(memberCreateDto.getNickname());
+//        member.setPassword(memberCreateDto.getPassword());
+//        memberService.join(member);
+//
+//        Map<String, String> response = new HashMap<>();
+//        response.put("message", "회원 생성 성공!");
+//        return response;
+//    } AuthController로 이동
 
-        Map<String, String> response = new HashMap<>();
-        response.put("message", "회원 생성 성공!");
-        return response;
-    }
-
-    /**
-     * Member 로그인 (JSON 요청 처리)
-     */
-    @PostMapping(value = "login", consumes = "application/json", produces = "application/json")
-    @Operation(summary = "회원 로그인", description = "회원으로 로그인합니다.")
-    public LoginResponseDTO login(@RequestBody LoginRequestDTO requestDTO) {
-        TokenInfo tokenInfo = memberService.login(requestDTO);
-
-        LoginResponseDTO responseDTO = new LoginResponseDTO();
-        responseDTO.setToken(tokenInfo.getAccessToken());
-        responseDTO.setNickname(requestDTO.getNickname());
-
-        return responseDTO;
-    }
+//    /**
+//     * Member 로그인 (JSON 요청 처리)
+//     */
+//    @PostMapping(value = "login", consumes = "application/json", produces = "application/json")
+//    @Operation(summary = "회원 로그인", description = "회원으로 로그인합니다.")
+//    public LoginResponseDTO login(@RequestBody LoginRequestDTO requestDTO) {
+//        TokenInfo tokenInfo = memberService.login(requestDTO);
+//
+//        LoginResponseDTO responseDTO = new LoginResponseDTO();
+//        responseDTO.setToken(tokenInfo.getAccessToken());
+//        responseDTO.setNickname(requestDTO.getNickname());
+//
+//        return responseDTO;
+//    } AuthController로 이동
 
 //    /**
 //     * Member 로그아웃 (JSON 요청 처리)
