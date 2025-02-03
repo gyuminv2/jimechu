@@ -17,6 +17,13 @@ services:
     networks:
       - jimechu
 
+  redis:
+    image: redis:latest
+    ports:
+      - "6379:6379"
+    networks:
+      - jimechu
+
   backend:
     image: spring-boot-app
     build:
@@ -32,16 +39,6 @@ services:
       - db
     networks:
       - jimechu
-
-  # frontend:
-  #   image: react-app
-  #   build:
-  #     context: ./frontend
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "3000:3000"
-  #   networks:
-  #     - jimechu
 
 volumes:
   postgres_data: {}
