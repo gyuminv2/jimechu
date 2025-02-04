@@ -25,7 +25,7 @@ public class TopicService {
      * Topic 생성
      */
     @Transactional
-    public Long createTopic(Long memberId, String title, List<Menu> menus) {
+    public Long createTopic(Long memberId, String title, Boolean isPublic, List<Menu> menus) {
 
         // 엔티티 조회
         Member member = memberRepository.findOne(memberId);
@@ -34,7 +34,7 @@ public class TopicService {
         }
 
         // Topic 생성
-        Topic topic = Topic.createTopic(title, member);
+        Topic topic = Topic.createTopic(title, member, isPublic);
 
         // Topic 저장
         topicRepository.save(topic);
