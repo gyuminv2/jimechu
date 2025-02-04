@@ -14,12 +14,14 @@ public class TopicDTO {
 
     private Long id;
     private String title;
+    private boolean isPublic;
 
     private List<MenuDTO> menus;
 
     public TopicDTO() {
         this.id = null;
         this.title = null;
+        this.isPublic = false;
         this.menus = null;
     }
 
@@ -27,6 +29,7 @@ public class TopicDTO {
     public TopicDTO(Topic topic) {
         this.id = topic.getId();
         this.title = topic.getTitle();
+        this.isPublic = topic.isPublic();
         this.menus = topic.getMenus().stream()
                 .map(MenuDTO::new)
                 .collect(Collectors.toList());

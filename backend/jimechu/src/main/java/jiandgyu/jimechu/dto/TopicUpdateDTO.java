@@ -6,4 +6,6 @@ import lombok.Data;
 public class TopicUpdateDTO {
 
     private String title;
+
+    private boolean isPublic;
 }

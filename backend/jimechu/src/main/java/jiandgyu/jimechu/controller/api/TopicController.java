@@ -33,7 +33,7 @@ public class TopicController {
     @PostMapping(value = "new", consumes = "application/json", produces = "application/json")
     @Operation(summary = "Topic 생성", description = "특정 Member의 새로운 Topic을 생성합니다.")
     public Map<String, String> createTopic(@RequestBody TopicCreateDTO topicCreateDTO) {
-        Long topicId = topicService.createTopic(topicCreateDTO.getMemberId(), topicCreateDTO.getTitle(), null);
+        Long topicId = topicService.createTopic(topicCreateDTO.getMemberId(), topicCreateDTO.getTitle(), topicCreateDTO.isPublic(), null);
 
         Map<String, String> response = new HashMap<>();
         response.put("message", "Topic 생성 성공!");

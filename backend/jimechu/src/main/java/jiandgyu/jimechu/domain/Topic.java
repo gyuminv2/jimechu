@@ -17,6 +17,8 @@ public class Topic {
 
     private String title;
 
+    private boolean isPublic;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
     private Member member;
@@ -31,9 +33,10 @@ public class Topic {
     }
 
     //==생성 메서드==//
-    public static Topic createTopic(String title, Member member) {
+    public static Topic createTopic(String title, Member member, boolean isPublic) {
         Topic topic = new Topic();
         topic.setTitle(title);
+        topic.setPublic(isPublic);
         topic.setMember(member);
         return topic;
     }

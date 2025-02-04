@@ -91,7 +91,7 @@ public class InitDataService {
      */
     private void saveMenusAsTopic(String topicName, List<String> menuNames, Member owner) {
         // Topic 생성
-        Topic topic = Topic.createTopic(topicName, owner);
+        Topic topic = Topic.createTopic(topicName, owner, true);
         topicRepository.save(topic);
 
         for (String name : menuNames) {
