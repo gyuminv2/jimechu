@@ -67,6 +67,11 @@ public class InitDataService {
     public void initData() {
         log.info("=== Init 데이터 로딩 시작 ===");
 
+        List<Member> findMember = memberRepository.findByNickname("jinkim2");
+        if (!findMember.isEmpty()) {
+            return;
+        }
+
         Member systemMember = new Member();
         systemMember.setNickname("jinkim2");
         systemMember.setPassword(passwordEncoder.encode("jinkim2")); // 임시 비밀번호
