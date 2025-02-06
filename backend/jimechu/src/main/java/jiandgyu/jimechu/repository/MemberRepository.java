@@ -43,7 +43,7 @@ public class MemberRepository {
     }
 
     /**
-     * String으로 멤버 찾기
+     * Nickname으로 멤버 찾기
      * @param Nickname
      * @return List
      */
