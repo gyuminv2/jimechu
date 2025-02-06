@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -25,7 +26,7 @@ public class TopicService {
      * Topic 생성
      */
     @Transactional
-    public Long createTopic(Long memberId, String title, Boolean isPublic, List<Menu> menus) {
+    public Long createTopic(Long memberId, String title, Boolean isPublic, ArrayList<String> menus) {
 
         // 엔티티 조회
         Member member = memberRepository.findOne(memberId);
@@ -35,6 +36,14 @@ public class TopicService {
 
         // Topic 생성
         Topic topic = Topic.createTopic(title, member, isPublic);
+
+        // Menu 생성
+        if (menus != null) {
+            for (String menuName : menus) {
+                Menu menu = Menu.createMenu(menuName, topic);
+                menuRepository.save(menu);
+            }
+        }
 
         // Topic 저장
         topicRepository.save(topic);
