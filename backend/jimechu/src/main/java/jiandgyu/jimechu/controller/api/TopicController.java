@@ -4,10 +4,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jiandgyu.jimechu.domain.Menu;
 import jiandgyu.jimechu.domain.Topic;
-import jiandgyu.jimechu.dto.MenuDTO;
-import jiandgyu.jimechu.dto.TopicCreateDTO;
-import jiandgyu.jimechu.dto.TopicDTO;
-import jiandgyu.jimechu.dto.TopicUpdateDTO;
+import jiandgyu.jimechu.dto.*;
 import jiandgyu.jimechu.service.MenuService;
 import jiandgyu.jimechu.service.TopicService;
 import lombok.RequiredArgsConstructor;
@@ -37,6 +34,20 @@ public class TopicController {
 
         Map<String, String> response = new HashMap<>();
         response.put("message", "Topic 생성 성공!");
+        response.put("topicId", String.valueOf(topicId));
+        return response;
+    }
+
+    /**
+     * Topic + Menu 생성 (JSON 요청 처리)
+     */
+    @PostMapping(value = "new-with-menus", consumes = "application/json", produces = "application/json")
+    @Operation(summary = "Topic + Menu 생성", description = "특정 Member의 새로운 Topic과 Menu들을 생성합니다.")
+    public Map<String, String> createTopicAndMenus(@RequestBody TopicAndMenuCreateDTO topicAndMenuCreateDTO) {
+        Long topicId = topicService.createTopic(topicAndMenuCreateDTO.getMemberId(), topicAndMenuCreateDTO.getTitle(), topicAndMenuCreateDTO.isPublic(), topicAndMenuCreateDTO.getMenus_name());
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Topic + Menu 생성 성공!");
         response.put("topicId", String.valueOf(topicId));
         return response;
     }
