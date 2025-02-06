@@ -19,9 +19,20 @@ public class Member {
 
     private String password;
 
+    // ✅ Topic 목록
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<Topic> topics = new ArrayList<>();
 
-    @OneToMany(mappedBy = "member")
+    // ✅ MemberRole 목록
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL)
     private List<MemberRole> memberRoles = new ArrayList<>();
+
+    // ✅ Follow 목록
+    // 내가 팔로우하는 사람들
+    @OneToMany(mappedBy = "follower", cascade = CascadeType.ALL)
+    private List<Follow> followers = new ArrayList<>();
+
+    // 나를 팔로우하는 사람들
+    @OneToMany(mappedBy = "following", cascade = CascadeType.ALL)
+    private List<Follow> followings = new ArrayList<>();
 }

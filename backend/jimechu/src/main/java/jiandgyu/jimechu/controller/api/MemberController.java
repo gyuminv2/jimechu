@@ -7,6 +7,7 @@ import jiandgyu.jimechu.config.security.TokenInfo;
 import jiandgyu.jimechu.domain.Member;
 import jiandgyu.jimechu.domain.Topic;
 import jiandgyu.jimechu.dto.*;
+import jiandgyu.jimechu.service.FollowService;
 import jiandgyu.jimechu.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -25,60 +26,7 @@ import java.util.stream.Collectors;
 public class MemberController {
 
     private final MemberService memberService;
-
-//    /**
-//     * 회원 가입 폼 (JSON 요청 처리)
-//     */
-//    @GetMapping(value = "news", produces = "application/json")
-//    @Operation(summary = "회원 가입 DTO", description = "회원 가입 DTO을 반환합니다.")
-//    public MemberCreateDTO createDTO() {
-//        return new MemberCreateDTO();
-//    } AuthController로 이동
-
-//    /**
-//     * Member 생성 (JSON 요청 처리)
-//     */
-//    @PostMapping(value = "new", consumes = "application/json", produces = "application/json")
-//    @Operation(summary = "회원 생성", description = "새로운 회원을 생성합니다.")
-//    public Map<String, String> createMember(@RequestBody MemberCreateDTO memberCreateDto) {
-//        Member member = new Member();
-//        member.setNickname(memberCreateDto.getNickname());
-//        member.setPassword(memberCreateDto.getPassword());
-//        memberService.join(member);
-//
-//        Map<String, String> response = new HashMap<>();
-//        response.put("message", "회원 생성 성공!");
-//        return response;
-//    } AuthController로 이동
-
-//    /**
-//     * Member 로그인 (JSON 요청 처리)
-//     */
-//    @PostMapping(value = "login", consumes = "application/json", produces = "application/json")
-//    @Operation(summary = "회원 로그인", description = "회원으로 로그인합니다.")
-//    public LoginResponseDTO login(@RequestBody LoginRequestDTO requestDTO) {
-//        TokenInfo tokenInfo = memberService.login(requestDTO);
-//
-//        LoginResponseDTO responseDTO = new LoginResponseDTO();
-//        responseDTO.setToken(tokenInfo.getAccessToken());
-//        responseDTO.setNickname(requestDTO.getNickname());
-//
-//        return responseDTO;
-//    } AuthController로 이동
-
-//    /**
-//     * Member 로그아웃 (JSON 요청 처리)
-//     */
-//    @PostMapping(value = "logout", consumes = "application/json", produces = "application/json")
-//    @Operation(summary = "회원 로그아웃", description = "로그아웃합니다.")
-//    public Map<String, String> logout(@RequestHeader("Authorization") String token) {
-//        String accessToken = token.replace("Bearer ", "");
-//        memberService.logout(accessToken);
-//
-//        Map<String, String> response = new HashMap<>();
-//        response.put("message", "로그아웃 성공!");
-//        return response;
-//    }
+    private final FollowService followService;
 
     /**
      * 내 정보 (JSON 요청 처리)
@@ -128,5 +76,75 @@ public class MemberController {
             topicDTOs.add(topicDTO);
         }
         return topicDTOs;
+    }
+
+    /**
+     * 특정 Member Follow (JSON 요청 처리)
+     */
+    @PostMapping(value = "follow/{targetMemberId}", produces = "application/json")
+    @Operation(summary = "특정 멤버 Follow", description = "특정 맴버를 Follow합니다.")
+    public Map<String, String> followMember(@AuthenticationPrincipal CustomMember customMember,
+                                            @PathVariable("targetMemberId") Long targetMemberId) {
+        if (customMember == null) {
+            throw new IllegalArgumentException("인증되지 않은 사용자입니다.");
+        }
+
+        followService.follow(customMember.getMemberId(), targetMemberId);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Follow 성공!");
+        return response;
+    }
+
+    /**
+     * 특정 Member Unfollow (JSON 요청 처리)
+     */
+    @PostMapping(value = "unfollow/{targetMemberId}", produces = "application/json")
+    @Operation(summary = "특정 멤버 Unfollow", description = "특정 맴버를 Unfollow합니다.")
+    public Map<String, String> unfollowMember(@AuthenticationPrincipal CustomMember customMember,
+                                              @PathVariable("targetMemberId") Long targetMemberId) {
+        if (customMember == null) {
+            throw new IllegalArgumentException("인증되지 않은 사용자입니다.");
+        }
+
+        followService.unfollow(customMember.getMemberId(), targetMemberId);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Unfollow 성공!");
+        return response;
+    }
+
+    /**
+     * 내가 Follow한 Following 조회 (JSON 요청 처리)
+     */
+    @GetMapping(value = "/followings", produces = "application/json")
+    @Operation(summary = "내가 Follow한 Followings 조회", description = "내가 Follow한 Followings를 조회합니다.")
+    public List<MemberDTO> getFollowers(@AuthenticationPrincipal CustomMember customMember) {
+        if (customMember == null) {
+            throw new IllegalArgumentException("인증되지 않은 사용자입니다.");
+        }
+
+        List<Member> followers = followService.getFollowings(customMember.getMemberId());
+
+        return followers.stream()
+                .map(MemberDTO::new)
+                .collect(Collectors.toList());
+    }
+
+    /**
+     * 나를 Follow한 Follower 조회 (JSON 요청 처리)
+     */
+    @GetMapping(value = "/followers", produces = "application/json")
+    @Operation(summary = "나를 Follow한 Followers 조회", description = "나를 Follow한 Followers를 조회합니다.")
+    public List<MemberDTO> getFollowings(@AuthenticationPrincipal CustomMember customMember) {
+        if (customMember == null) {
+            throw new IllegalArgumentException("인증되지 않은 사용자입니다.");
+        }
+
+        List<Member> followings = followService.getFollowers(customMember.getMemberId());
+
+        return followings.stream()
+                .map(MemberDTO::new)
+                .collect(Collectors.toList());
     }
 }
