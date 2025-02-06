@@ -65,6 +65,13 @@ public class TopicService {
     }
 
     /**
+     * topicId로 topic 조회
+     */
+    public Topic getTopicById(Long topicId) {
+        return topicRepository.findOne(topicId);
+    }
+
+    /**
      * topic update (title 바꾸기)
      */
     @Transactional

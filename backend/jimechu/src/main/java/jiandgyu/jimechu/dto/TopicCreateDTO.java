@@ -7,7 +7,5 @@ public class TopicCreateDTO {
 
     private String title;
 
-    private Long memberId;
-
     private boolean isPublic;
 }

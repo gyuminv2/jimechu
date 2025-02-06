@@ -2,12 +2,14 @@ package jiandgyu.jimechu.controller.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import jiandgyu.jimechu.config.security.CustomMember;
 import jiandgyu.jimechu.domain.Menu;
 import jiandgyu.jimechu.domain.Topic;
 import jiandgyu.jimechu.dto.*;
 import jiandgyu.jimechu.service.MenuService;
 import jiandgyu.jimechu.service.TopicService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -28,9 +30,15 @@ public class TopicController {
      * Topic 생성 (JSON 요청 처리)
      */
     @PostMapping(value = "new", consumes = "application/json", produces = "application/json")
-    @Operation(summary = "Topic 생성", description = "특정 Member의 새로운 Topic을 생성합니다.")
-    public Map<String, String> createTopic(@RequestBody TopicCreateDTO topicCreateDTO) {
-        Long topicId = topicService.createTopic(topicCreateDTO.getMemberId(), topicCreateDTO.getTitle(), topicCreateDTO.isPublic(), null);
+    @Operation(summary = "Topic 생성", description = "현재 LOGIN한 Member의 새로운 Topic을 생성합니다.")
+    public Map<String, String> createTopic(@AuthenticationPrincipal CustomMember customMember,
+                                           @RequestBody TopicCreateDTO topicCreateDTO) {
+
+        if (customMember == null) {
+            throw new IllegalArgumentException("인증되지 않은 사용자입니다.");
+        }
+
+        Long topicId = topicService.createTopic(customMember.getMemberId(), topicCreateDTO.getTitle(), topicCreateDTO.isPublic(), null);
 
         Map<String, String> response = new HashMap<>();
         response.put("message", "Topic 생성 성공!");
@@ -42,9 +50,14 @@ public class TopicController {
      * Topic + Menu 생성 (JSON 요청 처리)
      */
     @PostMapping(value = "new-with-menus", consumes = "application/json", produces = "application/json")
-    @Operation(summary = "Topic + Menu 생성", description = "특정 Member의 새로운 Topic과 Menu들을 생성합니다.")
-    public Map<String, String> createTopicAndMenus(@RequestBody TopicAndMenuCreateDTO topicAndMenuCreateDTO) {
-        Long topicId = topicService.createTopic(topicAndMenuCreateDTO.getMemberId(), topicAndMenuCreateDTO.getTitle(), topicAndMenuCreateDTO.isPublic(), topicAndMenuCreateDTO.getMenus_name());
+    @Operation(summary = "Topic + Menu 생성", description = "현재 LOGIN한 Member의 새로운 Topic과 Menu들을 생성합니다.")
+    public Map<String, String> createTopicAndMenus(@AuthenticationPrincipal CustomMember customMember,
+                                                   @RequestBody TopicAndMenuCreateDTO topicAndMenuCreateDTO) {
+        if (customMember == null) {
+            throw new IllegalArgumentException("인증되지 않은 사용자입니다.");
+        }
+
+        Long topicId = topicService.createTopic(customMember.getMemberId(), topicAndMenuCreateDTO.getTitle(), topicAndMenuCreateDTO.isPublic(), topicAndMenuCreateDTO.getMenus_name());
 
         Map<String, String> response = new HashMap<>();
         response.put("message", "Topic + Menu 생성 성공!");
@@ -83,7 +96,20 @@ public class TopicController {
      */
     @PatchMapping(value = "{topicId}", consumes = "application/json", produces = "application/json")
     @Operation(summary = "Topic Title 수정", description = "특정 Topic의 Title을 수정합니다.")
-    public Map<String, String> updateTopicTitle(@PathVariable("topicId") Long topicId, @RequestBody TopicUpdateDTO topicUpdateDTO) {
+    public Map<String, String> updateTopicTitle(@AuthenticationPrincipal CustomMember customMember,
+                                                @PathVariable("topicId") Long topicId,
+                                                @RequestBody TopicUpdateDTO topicUpdateDTO) {
+        if (customMember == null) {
+            throw new IllegalArgumentException("인증되지 않은 사용자입니다.");
+        }
+        // DB에서 해당 Topic 조회
+        Topic topic = topicService.getTopicById(topicId);
+
+        // Topic 소유자가 아닌 경우
+        if (!topic.getMember().getId().equals(customMember.getMemberId())) {
+            throw new IllegalArgumentException("해당 Topic의 소유자가 아닙니다.");
+        }
+
         topicService.updateTopicTitle(topicId, topicUpdateDTO.getTitle());
 
         Map<String, String> response = new HashMap<>();
@@ -91,7 +117,6 @@ public class TopicController {
         response.put("editedTopicTitle", topicUpdateDTO.getTitle());
         return response;
     }
-
 
     /**
      * 특정 Topic 삭제 (JSON 요청 처리)
