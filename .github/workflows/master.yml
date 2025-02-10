@@ -23,7 +23,7 @@ jobs:
 
       # 3. Gradle 빌드 (테스트 생략 옵션 -x test 사용)
       - name: Build with Gradle
-        run: ./gradlew build -x test
+        run: sh gradlew clean build -x test
 
       # 4. 빌드 산출물(jar 파일)을 EC2 서버로 전송 (scp 액션 사용)
       - name: Copy artifact to EC2
