@@ -1,29 +1,34 @@
-name: 🚀 Deploy Spring Boot to EC2
+name: Deploy to Server
 
 on:
   push:
     branches:
-      - master
+      - main # main 브랜치에 push될 때 실행
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
 
     steps:
-      - name: 📥 Checkout Repository
+      - name: Checkout Repository
         uses: actions/checkout@v3
 
-      - name: 🔑 Set up SSH & Deploy to EC2
+      - name: Setup SSH Key
         run: |
           echo "${{ secrets.PRIVATE_KEY }}" > private_key.pem
           chmod 600 private_key.pem
 
-          ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+      - name: Test SSH Connection
+        run: ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo SSH connection successful"
+
+      - name: Deploy to Server
+        run: |
+          ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} << 'EOF'
           set -e  # 스크립트 실행 중 에러 발생 시 중단
 
           echo "🔍 현재 위치: $(pwd)"
           echo "📂 프로젝트 폴더로 이동"
-          cd /home/ubuntu/my-app || exit
+          cd /home/${{ secrets.SSH_USER }}/my-app || exit
 
           echo "🔄 최신 코드 Pull"
           git fetch --all
@@ -45,6 +50,3 @@ jobs:
           echo "🚀 새 애플리케이션 실행"
           nohup java -jar build/libs/*.jar > output.log 2>&1 &
           EOF
-
-      - name: 🧹 Cleanup Private Key
-        run: rm -f private_key.pem
