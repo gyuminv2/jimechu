@@ -36,7 +36,7 @@ jobs:
           port: 22
           debug: true
           source: "backend/jimechu/build/libs/jimechu-0.0.1-SNAPSHOT.jar"
-          target: "/home/ec2-user/app/"
+          target: "/home/ubuntu/app/"
 
       # 5. EC2 서버에서 무중단 배포 스크립트 실행 (ssh 액션 사용)
       - name: Deploy application on EC2
@@ -47,5 +47,5 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           script: |
-            cd /home/ec2-user/app
+            cd /home/ubuntu/app
             ./deploy.sh
