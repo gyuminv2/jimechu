@@ -3,7 +3,7 @@ name: Deploy to EC2 (Zero Downtime)
 on:
   push:
     branches:
-      - master
+      - master #
 
 jobs:
   deploy:
