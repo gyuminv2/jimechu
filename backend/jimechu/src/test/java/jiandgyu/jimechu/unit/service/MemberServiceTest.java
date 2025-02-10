@@ -100,7 +100,7 @@ class MemberServiceTest {
         requestDTO.setNickname(nickname);
         requestDTO.setPassword(password);
 
-        TokenInfo mockTokenInfo = new TokenInfo("Bearer", "mockAccessToken");
+        TokenInfo mockTokenInfo = new TokenInfo("Bearer", "mockAccessToken", "mockRefreshToken");
 
         // Mock 설정
         when(authenticationManagerBuilder.getObject()).thenReturn(authentication -> mockAuthentication);

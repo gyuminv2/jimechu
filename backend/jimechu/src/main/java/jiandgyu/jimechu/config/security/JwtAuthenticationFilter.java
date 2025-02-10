@@ -19,11 +19,16 @@ import java.util.Map;
 public class JwtAuthenticationFilter extends GenericFilter {
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final RefreshTokenService refreshTokenService;
 
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
         try {
             String token = resolveToken((HttpServletRequest) request);
+
+            if (token != null && refreshTokenService.isBlacklisted(token)) {
+                throw new JwtException("해당 Access Token은 로그아웃 되었습니다.");
+            }
 
             if (token != null && jwtTokenProvider.validateToken(token)) {
                 Authentication authentication = jwtTokenProvider.getAuthentication(token);
