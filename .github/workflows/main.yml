@@ -19,7 +19,7 @@ jobs:
           chmod 600 private_key.pem
 
       - name: Test SSH Connection
-        run: ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo SSH connection successful"
+        run: ssh -v -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.SSH_USER }}@${{ secrets.SSH_HOST }} "echo SSH connection successful"
 
       - name: Deploy to Server
         run: |
