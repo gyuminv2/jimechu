@@ -32,7 +32,7 @@ jobs:
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.PRIVATE_KEY }}
+          key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           source: "backend/jimechu/build/libs/*.jar"
           target: "/home/ec2-user/app/"
@@ -43,7 +43,7 @@ jobs:
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ${{ secrets.EC2_USER }}
-          key: ${{ secrets.PRIVATE_KEY }}
+          key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           script: |
             cd /home/ec2-user/app
