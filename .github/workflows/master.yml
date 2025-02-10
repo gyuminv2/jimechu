@@ -34,7 +34,7 @@ jobs:
           username: ${{ secrets.EC2_USER }}
           key: ${{ secrets.PRIVATE_KEY }}
           port: 22
-          source: "build/libs/*.jar"
+          source: "backend/jimechu/build/libs/*.jar"
           target: "/home/ec2-user/app/"
 
       # 5. EC2 서버에서 무중단 배포 스크립트 실행 (ssh 액션 사용)
