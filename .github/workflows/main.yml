@@ -1,1 +1,26 @@
-test
+name: Deploy Spring Boot to EC2
+
+on:
+  push:
+    branches:
+      - main # main 브랜치에 push할 때 실행
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 📥 Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: 🔑 Set up SSH & Deploy to EC2
+        run: |
+          echo "${{ secrets.PRIVATE_KEY }}" > private_key.pem
+          chmod 600 private_key.pem
+          ssh -o StrictHostKeyChecking=no -i private_key.pem ${{ secrets.EC2_USER }}@${{ secrets.EC2_HOST }} << 'EOF'
+          cd /home/ubuntu/my-app
+          git pull origin main
+          ./gradlew build -x test
+          pkill -f 'java -jar'
+          nohup java -jar build/libs/*.jar > output.log 2>&1 &
+          EOF
