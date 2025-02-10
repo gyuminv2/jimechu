@@ -23,17 +23,21 @@ import java.util.stream.Collectors;
 @Component
 public class JwtTokenProvider {
 
-    private final String secretKey;
-    private final long jwtExpiration;
+    private final String key;
+    private final long accessExpiration;
+    private final long refreshExpiration;
+
 
     public JwtTokenProvider(@Value("${jwt.secret-key}") String secretKey,
-                            @Value("${jwt.expiration-time}") Long jwtExpiration) {
-        this.secretKey = secretKey;
-        this.jwtExpiration = jwtExpiration;
+                            @Value("${jwt.access-expiration-time}") Long accessExpiration,
+                            @Value("${jwt.refresh-expiration-time}") Long refreshExpiration) {
+        this.key = secretKey;
+        this.accessExpiration = accessExpiration;
+        this.refreshExpiration = refreshExpiration;
     }
 
     public SecretKey getKey() {
-        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(secretKey));
+        return Keys.hmacShaKeyFor(Decoders.BASE64.decode(key));
     }
 
     /**
@@ -41,28 +45,34 @@ public class JwtTokenProvider {
      */
     public TokenInfo createToken(Authentication authentication) {
         String authorities = authentication.getAuthorities().stream()
-                .map(GrantedAuthority::getAuthority).collect(Collectors.joining(","));
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(","));
 
         Date now = new Date();
-        Date accessExpiration = new Date(now.getTime() + jwtExpiration);
 
-        String jwt = Jwts.builder()
+        String accessToken = Jwts.builder()
                 .subject(authentication.getName())
                 .claim("auth", authorities)
                 .claim("memberId", ((CustomMember) authentication.getPrincipal()).getMemberId())
                 .issuedAt(now)
-                .expiration(accessExpiration)
+                .expiration(new Date(now.getTime() + accessExpiration))
                 .signWith(getKey(), Jwts.SIG.HS256)
                 .compact();
 
-        return new TokenInfo("Bearer", jwt);
+        String refreshToken = Jwts.builder()
+                .subject(authentication.getName())
+                .expiration(new Date(now.getTime() + refreshExpiration))
+                .signWith(getKey(), Jwts.SIG.HS256)
+                .compact();
+
+        return new TokenInfo("Bearer", accessToken, refreshToken);
     }
 
     /**
      * JWT 토큰 정보 추출
      */
-    public Authentication getAuthentication(String jwt) {
-        Claims claims = getClaims(jwt);
+    public Authentication getAuthentication(String token) {
+        Claims claims = getClaims(token);
         String auth = Optional.ofNullable(claims.get("auth", String.class))
                 .orElseThrow(() -> new RuntimeException("잘못된 토큰입니다."));
         Long memberId = Optional.ofNullable(claims.get("memberId", Long.class))
@@ -100,5 +110,9 @@ public class JwtTokenProvider {
                 .build()
                 .parseSignedClaims(jwt)
                 .getPayload();
+    }
+
+    public Date getExpiration(String token) {
+        return getClaims(token).getExpiration();
     }
 }

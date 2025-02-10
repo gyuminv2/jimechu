@@ -18,7 +18,7 @@ public class RedisCacheConfiguration {
     @Value("${spring.data.redis.port}")
     private int port;
 
-    @Value("${spring.data.redis.password}")
+    @Value("${spring.data.redis.password:}")
     private String password;
 
     /**
@@ -29,7 +29,9 @@ public class RedisCacheConfiguration {
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {
         RedisStandaloneConfiguration config = new RedisStandaloneConfiguration(host, port);
-        config.setPassword(password);
+        if (!password.isEmpty()) {
+            config.setPassword(password);
+        }
         return new LettuceConnectionFactory(config);
     }
 
@@ -40,15 +42,15 @@ public class RedisCacheConfiguration {
      */
     @Bean
     public RedisTemplate<String, Object> redisTemplate() {
-        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+        RedisTemplate<String, Object> template = new RedisTemplate<>();
         // Redis 연결을 위한 RedisConnectionFactory를 주입합니다.
-        redisTemplate.setConnectionFactory(redisConnectionFactory());
+        template.setConnectionFactory(redisConnectionFactory());
 
         // RedisTemplate의 Key, Value Serializer를 StringRedisSerializer로 설정합니다.
-        redisTemplate.setKeySerializer(new StringRedisSerializer());
-        redisTemplate.setValueSerializer(new StringRedisSerializer());
+        template.setKeySerializer(new StringRedisSerializer());
+        template.setValueSerializer(new StringRedisSerializer());
 
-        return redisTemplate;
+        return template;
     }
 
 

@@ -1,6 +1,7 @@
 package jiandgyu.jimechu.service;
 
 import jiandgyu.jimechu.config.security.JwtTokenProvider;
+import jiandgyu.jimechu.config.security.RefreshTokenService;
 import jiandgyu.jimechu.config.security.TokenInfo;
 import jiandgyu.jimechu.domain.Member;
 import jiandgyu.jimechu.domain.MemberRole;
@@ -33,6 +34,7 @@ public class MemberService {
     private final AuthenticationManagerBuilder authenticationManagerBuilder;
 
     private final JwtTokenProvider jwtTokenProvider;
+    private final RefreshTokenService refreshTokenService;
 
     /**
      * 회원 가입
@@ -89,7 +91,10 @@ public class MemberService {
         TokenInfo tokenInfo = jwtTokenProvider.createToken(authentication);
         log.debug("Generated JWT token: {}", tokenInfo);
 
-        // 5) Return the token
+        // 5) Save the refresh token
+        refreshTokenService.saveRefreshToken(requestDTO.getNickname(), tokenInfo.getRefreshToken());
+
+        // 6) Return the token
         return tokenInfo;
     }
 
