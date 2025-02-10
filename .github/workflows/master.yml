@@ -47,5 +47,6 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           script: |
+            echo "${{ secrets.APPLICATION_YML }}" > /home/ubuntu/app/config/application.yml
             cd /home/ubuntu/app
             sh deploy.sh
