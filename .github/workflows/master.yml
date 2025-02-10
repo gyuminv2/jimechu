@@ -47,5 +47,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           script: |
+            echo "export JWT_SECRET_KEY=${{ secrets.JWT_SECRET_KEY }}" >> ~/.bashrc
+            source ~/.bashrc
             cd /home/ubuntu/app
             sh deploy.sh
