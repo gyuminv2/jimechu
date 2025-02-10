@@ -3,7 +3,7 @@ name: 🚀 Deploy Spring Boot to EC2
 on:
   push:
     branches:
-      - main # main 브랜치에 push할 때 실행
+      - master
 
 jobs:
   deploy:
