@@ -38,7 +38,7 @@ jobs:
           source: "backend/jimechu/build/libs/jimechu-0.0.1-SNAPSHOT.jar"
           target: "/home/ubuntu/app/"
 
-      # 5. EC2 서버에서 무중단 배포 스크립트 실행 (ssh 액션 사용
+      # 5. EC2 서버에서 무중단 배포 스크립트 실행
       - name: Deploy application on EC2
         uses: appleboy/ssh-action@v0.1.4
         with:
