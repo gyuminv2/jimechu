@@ -1,7 +1,6 @@
 package jiandgyu.jimechu.config.security.service;
 
 import lombok.RequiredArgsConstructor;
-import lombok.Value;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Service;
 
@@ -20,15 +19,11 @@ public class RefreshTokenService {
     }
 
     public String getRefreshToken(String nickName) {
-        return redisTemplate.opsForValue().get(getKey(nickName));
+        return redisTemplate.opsForValue().get(getRefreshKey(nickName));
     }
 
     public void deleteRefreshToken(String nickname) {
         redisTemplate.delete(getRefreshKey(nickname));
-    }
-
-    public String getKey(String nickName) {
-        return "refreshToken:" + nickName;
     }
 
     public void blacklistAccessToken(String accessToken, Date expiration) {
@@ -38,6 +33,10 @@ public class RefreshTokenService {
         }
     }
 
+    public boolean isValidateRefreshToken(String nickname, String accessToken) {
+        String refreshToken = getRefreshToken(nickname);
+        return refreshToken != null && refreshToken.equals(accessToken);
+    }
     public boolean isBlacklisted(String accessToken) {
         return redisTemplate.hasKey(getBlacklistKey(accessToken));
     }

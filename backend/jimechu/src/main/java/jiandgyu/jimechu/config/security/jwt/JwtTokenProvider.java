@@ -45,13 +45,23 @@ public class JwtTokenProvider {
      * JWT 토큰 생성
      */
     public TokenInfo createToken(Authentication authentication) {
+        String accessToken = generateAccessToken(authentication);
+        String refreshToken = generateRefreshToken(authentication.getName());
+
+        return new TokenInfo("Bearer", accessToken, refreshToken);
+    }
+
+    /**
+     * Access Token 생성
+     */
+    public String generateAccessToken(Authentication authentication) {
         String authorities = authentication.getAuthorities().stream()
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","));
 
         Date now = new Date();
 
-        String accessToken = Jwts.builder()
+        return Jwts.builder()
                 .subject(authentication.getName())
                 .claim("auth", authorities)
                 .claim("memberId", ((CustomMember) authentication.getPrincipal()).getMemberId())
@@ -59,14 +69,19 @@ public class JwtTokenProvider {
                 .expiration(new Date(now.getTime() + accessExpiration))
                 .signWith(getKey(), Jwts.SIG.HS256)
                 .compact();
+    }
 
-        String refreshToken = Jwts.builder()
-                .subject(authentication.getName())
+    /**
+     * Refresh Token 생성
+     */
+    public String generateRefreshToken(String username) {
+        Date now = new Date();
+
+        return Jwts.builder()
+                .subject(username)
                 .expiration(new Date(now.getTime() + refreshExpiration))
                 .signWith(getKey(), Jwts.SIG.HS256)
                 .compact();
-
-        return new TokenInfo("Bearer", accessToken, refreshToken);
     }
 
     /**
@@ -105,7 +120,7 @@ public class JwtTokenProvider {
         }
     }
 
-    private Claims getClaims(String jwt) {
+    public Claims getClaims(String jwt) {
         return Jwts.parser()
                 .verifyWith(getKey())
                 .build()
@@ -113,7 +128,21 @@ public class JwtTokenProvider {
                 .getPayload();
     }
 
+    // JWT 토큰 검증
+    public boolean isValidToken(String token) {
+        try {
+            Claims claims = getClaims(token);
+            return claims.getExpiration().after(new Date());
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     public Date getExpiration(String token) {
         return getClaims(token).getExpiration();
+    }
+
+    public String getUsername(String token) {
+        return getClaims(token).getSubject();
     }
 }

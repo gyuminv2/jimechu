@@ -1,7 +1,6 @@
 package jiandgyu.jimechu.dto.auth;
 
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
 
 @Data
 public class LoginResponseDTO {
@@ -11,4 +10,10 @@ public class LoginResponseDTO {
     private String refreshToken;
 
     private String nickname;
+
+    public LoginResponseDTO(String accessToken, String refreshToken, String nickname) {
+        this.accessToken = accessToken;
+        this.refreshToken = refreshToken;
+        this.nickname = nickname;
+    }
 }
