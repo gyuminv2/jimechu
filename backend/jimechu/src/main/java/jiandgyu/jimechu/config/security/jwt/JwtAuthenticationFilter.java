@@ -26,18 +26,24 @@ public class JwtAuthenticationFilter extends GenericFilter {
         try {
             String token = resolveToken((HttpServletRequest) request);
 
-            if (token != null && refreshTokenService.isBlacklisted(token)) {
+            if (token == null) {
+                chain.doFilter(request, response);
+                return;
+            }
+
+            if (refreshTokenService.isBlacklisted(token)) {
                 throw new JwtException("해당 Access Token은 로그아웃 되었습니다.");
             }
 
-            if (token != null && jwtTokenProvider.validateToken(token)) {
+            if (jwtTokenProvider.validateToken(token)) {
                 Authentication authentication = jwtTokenProvider.getAuthentication(token);
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }
+
             chain.doFilter(request, response);
         } catch (JwtException | IllegalArgumentException e) {
             HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-            httpServletResponse.setStatus(HttpServletResponse.SC_OK);
+            httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
             httpServletResponse.setContentType("application/json;charset=UTF-8");
 
             Map<String, String> errors = new HashMap<>();
