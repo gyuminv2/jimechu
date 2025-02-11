@@ -77,7 +77,7 @@ public class AuthController {
     /**
      * Member 로그아웃 (JSON 요청 처리)
      */
-    @DeleteMapping(value = "logout", produces = "application/json")
+    @PostMapping(value = "logout", produces = "application/json")
     @Operation(summary = "회원 로그아웃", description = "로그아웃 및 Redis에서 Refresh Token을 삭제합니다.")
     public ResponseEntity<Map<String, String>> logout(@RequestHeader("Authorization") String accessToken, Principal principal) {
         if (principal == null) {
