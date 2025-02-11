@@ -1,11 +1,11 @@
 package jiandgyu.jimechu.unit.service;
 
-import jiandgyu.jimechu.config.security.JwtTokenProvider;
-import jiandgyu.jimechu.config.security.TokenInfo;
+import jiandgyu.jimechu.config.security.jwt.JwtTokenProvider;
+import jiandgyu.jimechu.config.security.jwt.TokenInfo;
 import jiandgyu.jimechu.domain.Member;
 import jiandgyu.jimechu.domain.MemberRole;
 import jiandgyu.jimechu.domain.Topic;
-import jiandgyu.jimechu.dto.LoginRequestDTO;
+import jiandgyu.jimechu.dto.auth.LoginRequestDTO;
 import jiandgyu.jimechu.repository.MemberRepository;
 import jiandgyu.jimechu.repository.MemberRoleRepository;
 import jiandgyu.jimechu.service.MemberService;

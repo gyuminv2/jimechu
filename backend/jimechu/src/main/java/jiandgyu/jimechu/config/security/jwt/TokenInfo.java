@@ -1,4 +1,4 @@
-package jiandgyu.jimechu.config.security;
+package jiandgyu.jimechu.config.security.jwt;
 
 import lombok.Data;
 

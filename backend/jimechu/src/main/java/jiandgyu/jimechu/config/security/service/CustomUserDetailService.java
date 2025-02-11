@@ -1,9 +1,7 @@
-package jiandgyu.jimechu.config.security;
+package jiandgyu.jimechu.config.security.service;
 
-import jiandgyu.jimechu.config.security.CustomMember;
 import jiandgyu.jimechu.domain.Member;
 import jiandgyu.jimechu.repository.MemberRepository;
-import jiandgyu.jimechu.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -19,7 +17,7 @@ import java.util.List;
 @RequiredArgsConstructor
 @Transactional
 @Slf4j
-class CustomUserDetailService implements UserDetailsService {
+public class CustomUserDetailService implements UserDetailsService {
 
     private final MemberRepository memberRepository;
 
@@ -37,20 +35,16 @@ class CustomUserDetailService implements UserDetailsService {
         // 3) Take the first matching record
         Member member = members.get(0);
         log.debug("Found member: {}", member);
-        log.debug("DB에서 불러온 member.password: {}", member.getPassword());
 
-        // 4) Convert to UserDetails
-        return createUserDetails(member);
-    }
 
-    private UserDetails createUserDetails(Member member) {
+        // 4) Create UserDetails
         log.debug("Creating UserDetails for member: {}", member);
         List<SimpleGrantedAuthority> authorities = member.getMemberRoles().stream()
                 // ROLE_MEMBER 권한 부여
                 .map(role -> new SimpleGrantedAuthority("ROLE_" + role.getRole()))
                 .toList();
-        log.debug("authorities : {}", authorities);
 
+        // 5) Return UserDetails
         return new CustomMember(member.getId(), member.getNickname(), member.getPassword(), authorities);
     }
 }

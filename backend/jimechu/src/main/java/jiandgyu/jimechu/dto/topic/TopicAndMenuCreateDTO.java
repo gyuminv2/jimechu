@@ -1,4 +1,4 @@
-package jiandgyu.jimechu.dto;
+package jiandgyu.jimechu.dto.topic;
 
 import lombok.Data;
 

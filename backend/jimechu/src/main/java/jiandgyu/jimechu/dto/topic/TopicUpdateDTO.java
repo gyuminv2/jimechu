@@ -1,9 +1,9 @@
-package jiandgyu.jimechu.dto;
+package jiandgyu.jimechu.dto.topic;
 
 import lombok.Data;
 
 @Data
-public class TopicCreateDTO {
+public class TopicUpdateDTO {
 
     private String title;
 

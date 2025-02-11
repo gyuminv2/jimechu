@@ -1,12 +1,10 @@
-package jiandgyu.jimechu.dto;
+package jiandgyu.jimechu.dto.topic;
 
-import jiandgyu.jimechu.domain.Menu;
 import jiandgyu.jimechu.domain.Topic;
+import jiandgyu.jimechu.dto.menu.MenuDTO;
 import lombok.Data;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 
 @Data

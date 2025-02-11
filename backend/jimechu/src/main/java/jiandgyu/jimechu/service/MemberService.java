@@ -1,13 +1,13 @@
 package jiandgyu.jimechu.service;
 
-import jiandgyu.jimechu.config.security.JwtTokenProvider;
-import jiandgyu.jimechu.config.security.RefreshTokenService;
-import jiandgyu.jimechu.config.security.TokenInfo;
+import jiandgyu.jimechu.config.security.jwt.JwtTokenProvider;
+import jiandgyu.jimechu.config.security.service.RefreshTokenService;
+import jiandgyu.jimechu.config.security.jwt.TokenInfo;
 import jiandgyu.jimechu.domain.Member;
 import jiandgyu.jimechu.domain.MemberRole;
 import jiandgyu.jimechu.domain.Role;
 import jiandgyu.jimechu.domain.Topic;
-import jiandgyu.jimechu.dto.LoginRequestDTO;
+import jiandgyu.jimechu.dto.auth.LoginRequestDTO;
 import jiandgyu.jimechu.repository.MemberRepository;
 import jiandgyu.jimechu.repository.MemberRoleRepository;
 import lombok.RequiredArgsConstructor;
@@ -74,7 +74,7 @@ public class MemberService {
         log.debug("login() called with nickname: {}, password: {}",
                 requestDTO.getNickname(), requestDTO.getPassword());
 
-        // 2) Create the authentication token
+        // 1) 사용자 입력 기반 UsernamePasswordAuthenticationToken 생성
         UsernamePasswordAuthenticationToken authenticationToken =
                 new UsernamePasswordAuthenticationToken(
                         requestDTO.getNickname(),
@@ -82,19 +82,24 @@ public class MemberService {
                 );
         log.debug("Created UsernamePasswordAuthenticationToken: {}", authenticationToken);
 
-        // 3) Perform authentication
+        /**
+         * 2) AuthenticationManager로 인증 수행
+         * authenticate() 메서드 호출 시, AuthenticationProvider의 authenticate() 메서드가 호출됨
+         * -> DaoAuthenticationProvider에서 CustomUserDetailService의 loadUserByUsername() 메서드 호출
+         * -> CustomUserDetailService에서 사용자 정보 조회
+         */
         Authentication authentication =
                 authenticationManagerBuilder.getObject().authenticate(authenticationToken);
         log.debug("Authentication successful. Principal: {}", authentication.getPrincipal());
 
-        // 4) Generate JWT token
+        // 3) SecurityContext에 Authentication 객체 저장
         TokenInfo tokenInfo = jwtTokenProvider.createToken(authentication);
         log.debug("Generated JWT token: {}", tokenInfo);
 
-        // 5) Save the refresh token
+        // 4) RefreshToken 저장
         refreshTokenService.saveRefreshToken(requestDTO.getNickname(), tokenInfo.getRefreshToken());
 
-        // 6) Return the token
+        // 5) TokenInfo 반환
         return tokenInfo;
     }
 

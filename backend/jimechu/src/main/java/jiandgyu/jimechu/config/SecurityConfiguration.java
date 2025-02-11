@@ -1,7 +1,10 @@
-package jiandgyu.jimechu.config.security;
+package jiandgyu.jimechu.config;
 
+import jiandgyu.jimechu.config.security.service.CustomUserDetailService;
+import jiandgyu.jimechu.config.security.jwt.JwtAuthenticationFilter;
+import jiandgyu.jimechu.config.security.jwt.JwtTokenProvider;
+import jiandgyu.jimechu.config.security.service.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.boot.SpringBootConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -15,7 +18,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
-public class SecurityConfig {
+public class SecurityConfiguration {
 
     private final JwtTokenProvider jwtTokenProvider;
     private final RefreshTokenService refreshTokenService;

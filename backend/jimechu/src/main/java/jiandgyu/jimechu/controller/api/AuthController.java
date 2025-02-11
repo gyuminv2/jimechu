@@ -2,18 +2,16 @@ package jiandgyu.jimechu.controller.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jiandgyu.jimechu.config.security.JwtTokenProvider;
-import jiandgyu.jimechu.config.security.RefreshTokenService;
-import jiandgyu.jimechu.config.security.TokenInfo;
+import jiandgyu.jimechu.config.security.jwt.JwtTokenProvider;
+import jiandgyu.jimechu.config.security.service.RefreshTokenService;
+import jiandgyu.jimechu.config.security.jwt.TokenInfo;
 import jiandgyu.jimechu.domain.Member;
-import jiandgyu.jimechu.dto.LoginRequestDTO;
-import jiandgyu.jimechu.dto.LoginResponseDTO;
-import jiandgyu.jimechu.dto.MemberCreateDTO;
+import jiandgyu.jimechu.dto.auth.LoginRequestDTO;
+import jiandgyu.jimechu.dto.auth.LoginResponseDTO;
+import jiandgyu.jimechu.dto.member.MemberCreateDTO;
 import jiandgyu.jimechu.service.MemberService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;

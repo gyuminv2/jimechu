@@ -2,10 +2,14 @@ package jiandgyu.jimechu.controller.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jiandgyu.jimechu.config.security.CustomMember;
+import jiandgyu.jimechu.config.security.service.CustomMember;
 import jiandgyu.jimechu.domain.Menu;
 import jiandgyu.jimechu.domain.Topic;
-import jiandgyu.jimechu.dto.*;
+import jiandgyu.jimechu.dto.menu.MenuDTO;
+import jiandgyu.jimechu.dto.topic.TopicAndMenuCreateDTO;
+import jiandgyu.jimechu.dto.topic.TopicCreateDTO;
+import jiandgyu.jimechu.dto.topic.TopicDTO;
+import jiandgyu.jimechu.dto.topic.TopicUpdateDTO;
 import jiandgyu.jimechu.service.MenuService;
 import jiandgyu.jimechu.service.TopicService;
 import lombok.RequiredArgsConstructor;

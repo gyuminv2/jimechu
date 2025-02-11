@@ -1,4 +1,4 @@
-package jiandgyu.jimechu.dto;
+package jiandgyu.jimechu.dto.auth;
 
 import lombok.Data;
 import lombok.RequiredArgsConstructor;

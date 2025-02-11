@@ -1,7 +1,7 @@
-package jiandgyu.jimechu.dto;
+package jiandgyu.jimechu.dto.member;
 
 import jiandgyu.jimechu.domain.Member;
-import jiandgyu.jimechu.domain.Topic;
+import jiandgyu.jimechu.dto.topic.TopicDTO;
 import lombok.Data;
 
 import java.util.List;

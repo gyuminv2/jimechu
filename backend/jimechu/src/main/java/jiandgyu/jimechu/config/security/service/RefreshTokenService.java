@@ -1,4 +1,4 @@
-package jiandgyu.jimechu.config.security;
+package jiandgyu.jimechu.config.security.service;
 
 import lombok.RequiredArgsConstructor;
 import lombok.Value;

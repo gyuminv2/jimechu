@@ -1,4 +1,4 @@
-package jiandgyu.jimechu.config.redis;
+package jiandgyu.jimechu.config;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -52,8 +52,4 @@ public class RedisCacheConfiguration {
 
         return template;
     }
-
-
-
-
 }

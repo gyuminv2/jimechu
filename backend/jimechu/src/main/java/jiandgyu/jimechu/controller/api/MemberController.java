@@ -2,11 +2,11 @@ package jiandgyu.jimechu.controller.api;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jiandgyu.jimechu.config.security.CustomMember;
-import jiandgyu.jimechu.config.security.TokenInfo;
+import jiandgyu.jimechu.config.security.service.CustomMember;
 import jiandgyu.jimechu.domain.Member;
 import jiandgyu.jimechu.domain.Topic;
-import jiandgyu.jimechu.dto.*;
+import jiandgyu.jimechu.dto.member.MemberDTO;
+import jiandgyu.jimechu.dto.topic.TopicDTO;
 import jiandgyu.jimechu.service.FollowService;
 import jiandgyu.jimechu.service.MemberService;
 import lombok.RequiredArgsConstructor;
