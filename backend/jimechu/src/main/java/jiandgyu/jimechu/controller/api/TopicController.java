@@ -42,7 +42,7 @@ public class TopicController {
             throw new IllegalArgumentException("인증되지 않은 사용자입니다.");
         }
 
-        Long topicId = topicService.createTopic(customMember.getMemberId(), topicCreateDTO.getTitle(), topicCreateDTO.isPublic(), null);
+        Long topicId = topicService.createTopic(customMember.getMemberId(), topicCreateDTO.getTitle(), topicCreateDTO.getVisibility(), null);
 
         Map<String, String> response = new HashMap<>();
         response.put("message", "Topic 생성 성공!");
@@ -61,7 +61,7 @@ public class TopicController {
             throw new IllegalArgumentException("인증되지 않은 사용자입니다.");
         }
 
-        Long topicId = topicService.createTopic(customMember.getMemberId(), topicAndMenuCreateDTO.getTitle(), topicAndMenuCreateDTO.isPublic(), topicAndMenuCreateDTO.getMenus_name());
+        Long topicId = topicService.createTopic(customMember.getMemberId(), topicAndMenuCreateDTO.getTitle(), topicAndMenuCreateDTO.getVisibility(), topicAndMenuCreateDTO.getMenus_name());
 
         Map<String, String> response = new HashMap<>();
         response.put("message", "Topic + Menu 생성 성공!");
@@ -74,8 +74,12 @@ public class TopicController {
      */
     @GetMapping(produces = "application/json")
     @Operation(summary = "전체 Topic 조회", description = "전체 Topic을 조회합니다.")
-    public List<TopicDTO> getAllTopics() {
-        List<Topic> topics = topicService.findTopics();
+    public List<TopicDTO> getAllTopics(@AuthenticationPrincipal CustomMember customMember) {
+        boolean isAuthenticated = customMember != null;
+        Long memberId = (customMember != null) ? customMember.getMemberId() : null;
+        boolean isAdmin = isAuthenticated && customMember.getUsername().equals("jinkim2");
+
+        List<Topic> topics = topicService.findTopics(isAuthenticated, memberId, isAdmin);
 
         return topics.stream()
                 .map(TopicDTO::new)

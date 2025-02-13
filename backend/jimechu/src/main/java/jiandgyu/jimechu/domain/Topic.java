@@ -17,7 +17,8 @@ public class Topic {
 
     private String title;
 
-    private boolean isPublic;
+    @Enumerated(EnumType.STRING)
+    private Visibility visibility;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
@@ -33,11 +34,15 @@ public class Topic {
     }
 
     //==생성 메서드==//
-    public static Topic createTopic(String title, Member member, boolean isPublic) {
+    public static Topic createTopic(String title, Member member, Visibility visibility) {
         Topic topic = new Topic();
         topic.setTitle(title);
-        topic.setPublic(isPublic);
+        topic.setVisibility(visibility);
         topic.setMember(member);
         return topic;
+    }
+
+    public boolean isPublicVisibility() {
+        return this.visibility == Visibility.PUBLIC;
     }
 }

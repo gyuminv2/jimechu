@@ -39,7 +39,8 @@ public class SecurityConfiguration {
                         .requestMatchers(
                                 "/api/auth/**",
                                 "/swagger-ui/**",
-                                "/api-docs/**").permitAll()
+                                "/api-docs/**",
+                                "/api/topics").permitAll()
 //                        .requestMatchers("/api/members/**").hasRole("Member")
                         .anyRequest().authenticated()
 //                        .anyRequest().permitAll()

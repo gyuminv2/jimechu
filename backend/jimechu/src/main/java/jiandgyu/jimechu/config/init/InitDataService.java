@@ -8,6 +8,7 @@ import jiandgyu.jimechu.repository.MenuRepository;
 import jiandgyu.jimechu.repository.TopicRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -27,6 +28,10 @@ public class InitDataService {
     private final MenuRepository menuRepository;
 
     private final BCryptPasswordEncoder passwordEncoder;
+
+    @Value("${admin.password}")
+    private String adminPassword;
+
 
     private static final List<String> MEAT = List.of(
             "삼겹살", "야키토리", "돼지곱창", "소곱창", "닭발", "후라이드치킨", "뒷고기", "회", "막창",
@@ -74,7 +79,7 @@ public class InitDataService {
 
         Member systemMember = new Member();
         systemMember.setNickname("jinkim2");
-        systemMember.setPassword(passwordEncoder.encode("jinkim2")); // 임시 비밀번호
+        systemMember.setPassword(passwordEncoder.encode(adminPassword));
         memberRepository.save(systemMember);
 
         MemberRole memberRole = MemberRole.builder()
@@ -83,10 +88,9 @@ public class InitDataService {
                 .build();
         memberRoleRepository.save(memberRole);
 
-        saveMenusAsTopic("지메추", DEFAULT_MENUS, systemMember);
-        saveMenusAsTopic("지디추", DESSERTS, systemMember);
-        saveMenusAsTopic("스메추", STONE_I_MENUS, systemMember);
-        // 메메추는 뺐음
+        saveMenusAsTopic("지메추", DEFAULT_MENUS, systemMember, Visibility.PUBLIC);
+        saveMenusAsTopic("지디추", DESSERTS, systemMember, Visibility.PUBLIC);
+        saveMenusAsTopic("스메추", STONE_I_MENUS, systemMember, Visibility.PUBLIC);
 
         log.info("=== 초기 데이터 로딩 완료 ===");
     }
@@ -94,9 +98,9 @@ public class InitDataService {
     /**
      * 하나의 Topic 아래 Menu들로 저장
      */
-    private void saveMenusAsTopic(String topicName, List<String> menuNames, Member owner) {
+    private void saveMenusAsTopic(String topicName, List<String> menuNames, Member owner, Visibility visibility) {
         // Topic 생성
-        Topic topic = Topic.createTopic(topicName, owner, true);
+        Topic topic = Topic.createTopic(topicName, owner, visibility);
         topicRepository.save(topic);
 
         for (String name : menuNames) {

@@ -3,6 +3,7 @@ package jiandgyu.jimechu.repository;
 import jakarta.persistence.EntityManager;
 import jiandgyu.jimechu.domain.Menu;
 import jiandgyu.jimechu.domain.Topic;
+import jiandgyu.jimechu.domain.Visibility;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
 
@@ -64,5 +65,25 @@ public class TopicRepository {
         if (topic != null) {
             em.remove(topic);
         }
+    }
+
+    /**
+     * 공개(PUBLIC) 주제만 조회
+     */
+    public List<Topic> findPublicTopics() {
+        return em.createQuery("SELECT t FROM Topic t WHERE t.visibility = :visibility", Topic.class)
+                .setParameter("visibility", Visibility.PUBLIC)
+                .getResultList();
+    }
+
+    /**
+     * 로그인 사용자의 개인 + 공개 주제 조회
+     */
+    public List<Topic> findPublicAndPrivateTopicsByMemberId(Long memberId) {
+        return em.createQuery(
+                        "SELECT t FROM Topic t WHERE t.visibility = 'PUBLIC' OR t.member.id = :memberId",
+                        Topic.class
+                ).setParameter("memberId", memberId)
+                .getResultList();
     }
 }

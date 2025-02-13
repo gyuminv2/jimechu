@@ -1,5 +1,6 @@
 package jiandgyu.jimechu.dto.topic;
 
+import jiandgyu.jimechu.domain.Visibility;
 import lombok.Data;
 
 import java.util.ArrayList;
@@ -9,7 +10,7 @@ public class TopicAndMenuCreateDTO {
 
     private String title;
 
-    private boolean isPublic;
+    private Visibility visibility;
 
     private ArrayList<String> menus_name;
 }

@@ -111,12 +111,12 @@ public class JwtTokenProvider {
         try {
             getClaims(token);
             return true;
-        } catch (SecurityException | MalformedJwtException |UnsupportedJwtException | IllegalArgumentException e) {
-                log.debug("[잘못된 토큰] " + e.getMessage());
-                throw new JwtException("[잘못된 토큰] " + e.getMessage());
         } catch (ExpiredJwtException e) {
-            log.debug("[만료된 토큰] " + e.getMessage());
-            throw new JwtException("[만료된 토큰] " + e.getMessage());
+            log.warn("[만료된 토큰] " + e.getMessage());
+            throw e;  // 예외를 그대로 던져서 filter 에서 처리 !
+        } catch (JwtException | IllegalArgumentException e) {
+            log.warn("[잘못된 토큰] " + e.getMessage());
+            throw new JwtException("[잘못된 토큰] " + e.getMessage());
         }
     }
 

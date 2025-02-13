@@ -1,6 +1,7 @@
 package jiandgyu.jimechu.dto.topic;
 
 import jiandgyu.jimechu.domain.Topic;
+import jiandgyu.jimechu.domain.Visibility;
 import jiandgyu.jimechu.dto.menu.MenuDTO;
 import lombok.Data;
 
@@ -12,14 +13,14 @@ public class TopicDTO {
 
     private Long id;
     private String title;
-    private boolean isPublic;
+    private Visibility visibility;
 
     private List<MenuDTO> menus;
 
     public TopicDTO() {
         this.id = null;
         this.title = null;
-        this.isPublic = false;
+        this.visibility = null;
         this.menus = null;
     }
 
@@ -27,7 +28,7 @@ public class TopicDTO {
     public TopicDTO(Topic topic) {
         this.id = topic.getId();
         this.title = topic.getTitle();
-        this.isPublic = topic.isPublic();
+        this.visibility = topic.getVisibility();
         this.menus = topic.getMenus().stream()
                 .map(MenuDTO::new)
                 .collect(Collectors.toList());

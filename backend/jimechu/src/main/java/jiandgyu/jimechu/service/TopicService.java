@@ -3,6 +3,7 @@ package jiandgyu.jimechu.service;
 import jiandgyu.jimechu.domain.Member;
 import jiandgyu.jimechu.domain.Menu;
 import jiandgyu.jimechu.domain.Topic;
+import jiandgyu.jimechu.domain.Visibility;
 import jiandgyu.jimechu.repository.MemberRepository;
 import jiandgyu.jimechu.repository.MenuRepository;
 import jiandgyu.jimechu.repository.TopicRepository;
@@ -26,7 +27,7 @@ public class TopicService {
      * Topic 생성
      */
     @Transactional
-    public Long createTopic(Long memberId, String title, Boolean isPublic, ArrayList<String> menus) {
+    public Long createTopic(Long memberId, String title, Visibility visibility, ArrayList<String> menus) {
 
         // 엔티티 조회
         Member member = memberRepository.findOne(memberId);
@@ -35,7 +36,7 @@ public class TopicService {
         }
 
         // Topic 생성
-        Topic topic = Topic.createTopic(title, member, isPublic);
+        Topic topic = Topic.createTopic(title, member, visibility);
 
         // Menu 생성
         if (menus != null) {
@@ -53,8 +54,17 @@ public class TopicService {
     /**
      * 전체 Topic 조회
      */
-    public List<Topic> findTopics() {
-        return topicRepository.findAll();
+    public List<Topic> findTopics(Boolean isAuthenticated, Long memberId, boolean isAdmin) {
+        if (isAdmin) {
+            // 관리자(ADMIN)는 모든 PUBLIC + PRIVATE 토픽 조회
+            return topicRepository.findAll();
+        } else if (isAuthenticated) {
+            // 로그인한 사용자는 자신의 PRIVATE + 모든 PUBLIC 토픽 조회
+            return topicRepository.findPublicAndPrivateTopicsByMemberId(memberId);
+        } else {
+            // 비로그인 사용자는 PUBLIC 토픽만 조회 가능
+            return topicRepository.findPublicTopics();
+        }
     }
 
     /**

@@ -54,7 +54,7 @@ class TopicServiceTest {
         });
 
         // when
-        Long topicId = topicService.createTopic(1L, "지메추", true, null);
+        Long topicId = topicService.createTopic(1L, "지메추",
 
         // then
         assertEquals(topicId, 1L);

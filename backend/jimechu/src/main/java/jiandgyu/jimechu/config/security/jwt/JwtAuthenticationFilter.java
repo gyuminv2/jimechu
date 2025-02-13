@@ -1,6 +1,7 @@
 package jiandgyu.jimechu.config.security.jwt;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import jakarta.servlet.*;
 import jakarta.servlet.http.HttpServletRequest;
@@ -35,21 +36,15 @@ public class JwtAuthenticationFilter extends GenericFilter {
                 throw new JwtException("해당 Access Token은 로그아웃 되었습니다.");
             }
 
-            if (jwtTokenProvider.validateToken(token)) {
-                Authentication authentication = jwtTokenProvider.getAuthentication(token);
-                SecurityContextHolder.getContext().setAuthentication(authentication);
-            }
+            jwtTokenProvider.validateToken(token);  // 만료된 토큰 감지 시 ExpiredJwtException 발생 !
 
+            Authentication authentication = jwtTokenProvider.getAuthentication(token);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
             chain.doFilter(request, response);
+        } catch (ExpiredJwtException e) {
+            sendErrorResponse((HttpServletResponse) response, HttpServletResponse.SC_UNAUTHORIZED, "Access Token이 만료되었습니다.");
         } catch (JwtException | IllegalArgumentException e) {
-            HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-            httpServletResponse.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            httpServletResponse.setContentType("application/json;charset=UTF-8");
-
-            Map<String, String> errors = new HashMap<>();
-            errors.put("token", e.getMessage());
-
-            httpServletResponse.getWriter().write(new ObjectMapper().writeValueAsString(errors));
+            sendErrorResponse((HttpServletResponse) response, HttpServletResponse.SC_FORBIDDEN, e.getMessage());
         }
     }
 
@@ -59,6 +54,16 @@ public class JwtAuthenticationFilter extends GenericFilter {
             return bearerToken.substring(7);
         }
         return null;
+    }
+
+    private void sendErrorResponse(HttpServletResponse response, int status, String message) throws IOException {
+        response.setStatus(status);
+        response.setContentType("application/json;charset=UTF-8");
+
+        Map<String, String> errors = new HashMap<>();
+        errors.put("error", message);
+
+        response.getWriter().write(new ObjectMapper().writeValueAsString(errors));
     }
 
     @Override
