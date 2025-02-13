@@ -21,12 +21,12 @@ jobs:
           distribution: temurin
           java-version: "17"
 
-      # 3. Gradle 빌드 (테스트 생략 옵션 -x test 사용)
+      # 3. Gradle 빌드
       - name: Build with Gradle
         working-directory: backend/jimechu
         run: sh gradlew clean build -x test
 
-      # 4. 빌드 산출물(jar 파일)을 EC2 서버로 전송 (scp 액션 사용)
+      # 4. jar 파일을 EC2 서버로 전송
       - name: Copy artifact to EC2
         uses: appleboy/scp-action@v0.1.4
         with:
