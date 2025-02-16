@@ -23,9 +23,19 @@ public class JwtAuthenticationFilter extends GenericFilter {
     private final RefreshTokenService refreshTokenService;
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws ServletException, IOException {
+    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
+            throws ServletException, IOException {
+        HttpServletRequest httpRequest = (HttpServletRequest) request;
+        String requestURI = httpRequest.getRequestURI();
+
+        // refresh 엔드포인트는 토큰 검증 로직을 건너뛰도록 처리
+        if ("/api/auth/refresh".equals(requestURI)) {
+            chain.doFilter(request, response);
+            return;
+        }
+
         try {
-            String token = resolveToken((HttpServletRequest) request);
+            String token = resolveToken(httpRequest);
 
             if (token == null) {
                 chain.doFilter(request, response);
@@ -36,13 +46,14 @@ public class JwtAuthenticationFilter extends GenericFilter {
                 throw new JwtException("해당 Access Token은 로그아웃 되었습니다.");
             }
 
-            jwtTokenProvider.validateToken(token);  // 만료된 토큰 감지 시 ExpiredJwtException 발생 !
+            jwtTokenProvider.validateToken(token); // 만료된 토큰 감지 시 ExpiredJwtException 발생
 
             Authentication authentication = jwtTokenProvider.getAuthentication(token);
             SecurityContextHolder.getContext().setAuthentication(authentication);
             chain.doFilter(request, response);
         } catch (ExpiredJwtException e) {
-            sendErrorResponse((HttpServletResponse) response, HttpServletResponse.SC_UNAUTHORIZED, "Access Token이 만료되었습니다.");
+            sendErrorResponse((HttpServletResponse) response, HttpServletResponse.SC_UNAUTHORIZED,
+                    "Access Token이 만료되었습니다.");
         } catch (JwtException | IllegalArgumentException e) {
             sendErrorResponse((HttpServletResponse) response, HttpServletResponse.SC_FORBIDDEN, e.getMessage());
         }
