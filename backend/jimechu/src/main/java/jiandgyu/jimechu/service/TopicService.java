@@ -97,6 +97,13 @@ public class TopicService {
     }
 
     /**
+     * topicId로 topic visibility 조회
+     */
+    public String getTopicVisibilityById(Long topicId) {
+        return topicRepository.findOne(topicId).getVisibility().name();
+    }
+
+    /**
      * topic 삭제, topic에 속한 menu도 삭제
      */
     @Transactional
