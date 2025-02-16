@@ -40,7 +40,9 @@ public class SecurityConfiguration {
                                 "/api/auth/**",
                                 "/swagger-ui/**",
                                 "/api-docs/**",
-                                "/api/topics").permitAll()
+                                "/api/topics",
+                                "/api/topics/*/menus",
+                                "/api/auth/refresh").permitAll()
 //                        .requestMatchers("/api/members/**").hasRole("Member")
                         .anyRequest().authenticated()
 //                        .anyRequest().permitAll()

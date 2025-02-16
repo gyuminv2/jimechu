@@ -91,7 +91,12 @@ public class TopicController {
      */
     @GetMapping(value = "{topicId}/menus", produces = "application/json")
     @Operation(summary = "특정 Topic의 Menus 조회", description = "특정 Topic의 Menu 목록을 반환합니다.")
-    public List<MenuDTO> getMenusByTopic(@PathVariable("topicId") Long topicId) {
+    public List<MenuDTO> getMenusByTopic(@AuthenticationPrincipal CustomMember customMember,
+                                         @PathVariable("topicId") Long topicId) {
+        if (customMember == null) {
+            throw new IllegalArgumentException("인증되지 않은 사용자입니다.");
+        }
+
         List<Menu> menus = menuService.getMenusByTopic(topicId);
 
         return menus.stream()
