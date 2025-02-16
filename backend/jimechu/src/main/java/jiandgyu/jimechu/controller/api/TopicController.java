@@ -42,6 +42,14 @@ public class TopicController {
             throw new IllegalArgumentException("인증되지 않은 사용자입니다.");
         }
 
+        if (topicCreateDTO.getTitle() == null || topicCreateDTO.getTitle().isEmpty()) {
+            throw new IllegalArgumentException("Title이 비어있습니다.");
+        }
+
+        if (topicCreateDTO.getVisibility() == null) {
+            throw new IllegalArgumentException("Visibility가 비어있습니다.");
+        }
+
         Long topicId = topicService.createTopic(customMember.getMemberId(), topicCreateDTO.getTitle(), topicCreateDTO.getVisibility(), null);
 
         Map<String, String> response = new HashMap<>();

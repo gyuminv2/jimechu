@@ -75,7 +75,7 @@ public class AuthController {
 
     /**
      * Refresh Token 재발급 (JSON 요청 처리)
-     * 클라이언트는 header에 기존의 access token, body에 refresh token을 전달합니다.
+     * 클라이언트는 header에 access token, body에 refresh token을 전달합니다.
      */
     @PostMapping(value = "refresh", produces = "application/json")
     @Operation(summary = "Access Token 재발급", description = "Refresh Token을 이용하여 새로운 Access Token을 발급하고, 기존 Access Token을 블랙리스트에 등록합니다.")
