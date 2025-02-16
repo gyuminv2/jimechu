@@ -60,11 +60,12 @@ public class AuthService {
      * @return TokenInfo (새 access token, 기존 refresh token)
      */
     public TokenInfo refreshToken(String oldAccessToken, String providedRefreshToken) {
-        // 1. access token의 클레임 추출 (만료 토큰이라도 클레임을 얻기 위해 ExpiredJwtException 처리)
+        // 1. access token의 클레임 추출 (만료된 토큰도 처리)
         Claims claims;
         try {
             claims = jwtTokenProvider.getClaims(oldAccessToken);
         } catch (ExpiredJwtException ex) {
+            // 만료된 경우에도 claims를 얻는다.
             claims = ex.getClaims();
         } catch (JwtException | IllegalArgumentException e) {
             throw new RuntimeException("Access token이 유효하지 않습니다.");
@@ -75,12 +76,12 @@ public class AuthService {
             throw new RuntimeException("Access token에 사용자 정보가 없습니다.");
         }
 
-        // 2. refresh token이 전달되었는지 검증
+        // 2. refresh token 전달 여부 확인
         if (providedRefreshToken == null || providedRefreshToken.isEmpty()) {
             throw new RuntimeException("Refresh token이 요청에 포함되어 있지 않습니다.");
         }
 
-        // 3. Redis에 저장된 refresh token과 일치하는지 확인
+        // 3. Redis에 저장된 refresh token과 비교
         String storedRefreshToken = refreshTokenService.getRefreshToken(username);
         if (storedRefreshToken == null) {
             throw new RuntimeException("해당 사용자에 대한 refresh token이 존재하지 않습니다.");
@@ -109,8 +110,8 @@ public class AuthService {
         Authentication newAuth = new UsernamePasswordAuthenticationToken(principal, null, authorities);
         String newAccessToken = jwtTokenProvider.generateAccessToken(newAuth);
 
-        // 6. 기존 access token 블랙리스트 등록
-        Date oldExpiration = jwtTokenProvider.getExpiration(oldAccessToken);
+        // 6. 기존 access token의 만료시간은 claims에서 직접 가져오기
+        Date oldExpiration = claims.getExpiration();
         refreshTokenService.blacklistAccessToken(oldAccessToken, oldExpiration);
 
         return new TokenInfo("Bearer", newAccessToken, providedRefreshToken);
