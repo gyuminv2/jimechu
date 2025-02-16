@@ -93,8 +93,8 @@ public class TopicController {
     @Operation(summary = "특정 Topic의 Menus 조회", description = "특정 Topic의 Menu 목록을 반환합니다.")
     public List<MenuDTO> getMenusByTopic(@AuthenticationPrincipal CustomMember customMember,
                                          @PathVariable("topicId") Long topicId) {
-        if (customMember == null) {
-            throw new IllegalArgumentException("인증되지 않은 사용자입니다.");
+        if (topicService.getTopicVisibilityById(topicId).equals("PRIVATE") && customMember == null) {
+            throw new IllegalArgumentException("해당 Topic은 Private이므로 조회할 수 없습니다.");
         }
 
         List<Menu> menus = menuService.getMenusByTopic(topicId);
