@@ -6,10 +6,7 @@ import jiandgyu.jimechu.config.security.service.CustomMember;
 import jiandgyu.jimechu.domain.Menu;
 import jiandgyu.jimechu.domain.Topic;
 import jiandgyu.jimechu.dto.menu.MenuDTO;
-import jiandgyu.jimechu.dto.topic.TopicAndMenuCreateDTO;
-import jiandgyu.jimechu.dto.topic.TopicCreateDTO;
-import jiandgyu.jimechu.dto.topic.TopicDTO;
-import jiandgyu.jimechu.dto.topic.TopicUpdateDTO;
+import jiandgyu.jimechu.dto.topic.*;
 import jiandgyu.jimechu.service.MenuService;
 import jiandgyu.jimechu.service.TopicService;
 import lombok.RequiredArgsConstructor;
@@ -111,6 +108,35 @@ public class TopicController {
                 .map(MenuDTO::new)
                 .collect(Collectors.toList());
     }
+
+    /**
+     * Topic + Menu 수정 (JSON 요청 처리)
+     */
+    @PutMapping(value = "{topicId}", consumes = "application/json", produces = "application/json")
+    @Operation(summary = "Topic + Menu 수정", description = "특정 Topic의 Title과 Menu들을 수정합니다.")
+    public Map<String, String> updateTopicAndMenus(@AuthenticationPrincipal CustomMember customMember,
+                                                   @PathVariable("topicId") Long topicId,
+                                                   @RequestBody TopicAndMenuUpdateDTO topicAndMenuUpdateDTO) {
+        if (customMember == null) {
+            throw new IllegalArgumentException("인증되지 않은 사용자입니다.");
+        }
+
+        // DB에서 해당 Topic 조회
+        Topic topic = topicService.getTopicById(topicId);
+
+        // Topic 소유자가 아닌 경우
+        if (!topic.getMember().getId().equals(customMember.getMemberId())) {
+            throw new IllegalArgumentException("Topic의 소유자가 아닙니다.");
+        }
+
+        topicService.updateTopicAndMenus(topicId, topicAndMenuUpdateDTO);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Topic + Menu 수정 성공!");
+        response.put("editedTopicTitle", topicAndMenuUpdateDTO.getTitle());
+        return response;
+    }
+
 
     /**
      * Topic Title 수정 (JSON 요청 처리)

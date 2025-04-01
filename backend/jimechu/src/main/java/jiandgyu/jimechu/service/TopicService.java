@@ -4,6 +4,7 @@ import jiandgyu.jimechu.domain.Member;
 import jiandgyu.jimechu.domain.Menu;
 import jiandgyu.jimechu.domain.Topic;
 import jiandgyu.jimechu.domain.Visibility;
+import jiandgyu.jimechu.dto.topic.TopicAndMenuUpdateDTO;
 import jiandgyu.jimechu.repository.MemberRepository;
 import jiandgyu.jimechu.repository.MenuRepository;
 import jiandgyu.jimechu.repository.TopicRepository;
@@ -49,6 +50,28 @@ public class TopicService {
         // Topic 저장
         topicRepository.save(topic);
         return topic.getId();
+    }
+
+    /**
+     * Topic 수정
+     */
+    @Transactional
+    public void updateTopicAndMenus(Long topicId, TopicAndMenuUpdateDTO topicAndMenuUpdateDTO) {
+        Topic topic = topicRepository.findOne(topicId);
+        if (topic == null) {
+            throw new RuntimeException("존재하지 않는 topicId : " + topicId);
+        }
+        // Topic 수정
+        topic.setTitle(topicAndMenuUpdateDTO.getTitle());
+        topic.setVisibility(topicAndMenuUpdateDTO.getVisibility());
+        menuRepository.deleteByTopicId(topicId);
+
+        if (topicAndMenuUpdateDTO.getMenus_name() != null) {
+            for (String menuName : topicAndMenuUpdateDTO.getMenus_name()) {
+                Menu menu = Menu.createMenu(menuName, topic);
+                menuRepository.save(menu);
+            }
+        }
     }
 
     /**
