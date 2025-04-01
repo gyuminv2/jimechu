@@ -36,7 +36,6 @@ public class JwtAuthenticationFilter extends GenericFilter {
 
         try {
             String token = resolveToken(httpRequest);
-
             if (token == null) {
                 chain.doFilter(request, response);
                 return;
@@ -52,6 +51,10 @@ public class JwtAuthenticationFilter extends GenericFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             chain.doFilter(request, response);
         } catch (ExpiredJwtException e) {
+            if (e.getClaims() != null && e.getClaims().get("auth") == null) {
+                sendErrorResponse((HttpServletResponse) response, HttpServletResponse.SC_FORBIDDEN,
+                        "Refresh Token이 만료되었습니다. 재로그인 해주세요.");
+            }
             sendErrorResponse((HttpServletResponse) response, HttpServletResponse.SC_UNAUTHORIZED,
                     "Access Token이 만료되었습니다.");
         } catch (JwtException | IllegalArgumentException e) {
