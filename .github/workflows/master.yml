@@ -31,21 +31,26 @@ jobs:
         uses: appleboy/scp-action@v0.1.4
         with:
           host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
+          username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           debug: true
           source: "backend/jimechu/build/libs/jimechu-0.0.1-SNAPSHOT.jar"
-          target: "/home/ubuntu/app/"
+          target: "/home/ec2-user/app/"
 
       # 5. EC2 서버에서 무중단 배포 스크립트 실행
       - name: Deploy application on EC2
         uses: appleboy/ssh-action@v0.1.4
         with:
           host: ${{ secrets.EC2_HOST }}
-          username: ${{ secrets.EC2_USER }}
+          username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
+          #  RDB 접속 정보를 환경변수로 주입하여 스크립트 실행
           script: |
-            cd /home/ubuntu/app
+            export RDS_HOSTNAME=${{ secrets.RDS_HOSTNAME }}
+            export RDS_DB_NAME=${{ secrets.RDS_DB_NAME }}
+            export RDS_USERNAME=${{ secrets.RDS_USERNAME }}
+            export RDS_PASSWORD=${{ secrets.RDS_PASSWORD }}
+            cd /home/ec2-user/app
             sh deploy.sh
