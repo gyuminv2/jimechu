@@ -38,19 +38,26 @@ jobs:
           source: "backend/jimechu/build/libs/jimechu-0.0.1-SNAPSHOT.jar"
           target: "/home/ec2-user/app/"
 
-      # 5. EC2 서버에서 무중단 배포 스크립트 실행 (버전 업데이트)
+      # 5. EC2 서버에서 무중단 배포 스크립트 실행 (새로운 방식)
       - name: Deploy application on EC2
-        uses: appleboy/ssh-action@v1.0.3 # 👈 수정: v0.1.4 -> v1.0.3
+        uses: appleboy/ssh-action@v1.0.3
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
-          #  RDB 접속 정보를 환경변수로 주입하여 스크립트 실행
           script: |
-            export RDS_HOSTNAME=${{ secrets.RDS_HOSTNAME }}
-            export RDS_DB_NAME=${{ secrets.RDS_DB_NAME }}
-            export RDS_USERNAME=${{ secrets.RDS_USERNAME }}
-            export RDS_PASSWORD=${{ secrets.RDS_PASSWORD }}
-            cd /home/ec2-user/app
-            sh deploy.sh
+            # EC2 서버에 .env 파일을 실시간으로 생성합니다.
+            cat > /home/ec2-user/app/.env <<EOF
+            RDS_HOSTNAME=${{ secrets.RDS_HOSTNAME }}
+            RDS_PORT=5432
+            RDS_DB_NAME=${{ secrets.RDS_DB_NAME }}
+            RDS_USERNAME=${{ secrets.RDS_USERNAME }}
+            RDS_PASSWORD=${{ secrets.RDS_PASSWORD }}
+            REDIS_HOST=localhost
+            REDIS_PORT=6379
+            JWT_SECRET=${{ secrets.JWT_SECRET }}
+            EOF
+
+            # EC2에 준비해 둔 배포 스크립트를 실행합니다.
+            sh /home/ec2-user/app/deploy.sh
