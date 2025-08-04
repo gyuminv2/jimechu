@@ -38,7 +38,7 @@ jobs:
           source: "backend/jimechu/build/libs/jimechu-0.0.1-SNAPSHOT.jar"
           target: "/home/ec2-user/app/"
 
-      # 5. EC2 서버에서 무중단 배포 스크립트 실행 (새로운 방식)
+      # 5. EC2 서버에서 무중단 배포 스크립트 실행 (최종 버전)
       - name: Deploy application on EC2
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -48,6 +48,7 @@ jobs:
           port: 22
           script: |
             # EC2 서버에 .env 파일을 실시간으로 생성합니다.
+            # 이 파일 안의 변수들은 application-prod.yml에서 사용됩니다.
             cat > /home/ec2-user/app/.env <<EOF
             RDS_HOSTNAME=${{ secrets.RDS_HOSTNAME }}
             RDS_PORT=5432
