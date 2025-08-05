@@ -38,7 +38,7 @@ jobs:
           source: "backend/jimechu/build/libs/jimechu-0.0.1-SNAPSHOT.jar"
           target: "/home/ec2-user/app/"
 
-      # 5. EC2 서버에 application-prod.yml 생성 및 배포 스크립트 실행
+      # 5. EC2 서버에 application-prod.yml 생성 및 배포 스크립트 실행 (최종 수정)
       - name: Deploy application on EC2
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -47,12 +47,10 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           script: |
-            # JAR 파일이 위치할 디렉토리 경로
+            # JAR 파일이 위치할 디렉토리 경로 (***를 jimechu로 수정)
             JAR_DIR="/home/ec2-user/app/backend/jimechu/build/libs"
 
             # 해당 디렉토리에 application-prod.yml 파일을 생성합니다.
-            # Spring Boot는 prod 프로파일이 활성화되면, JAR 파일과 동일한 위치에 있는
-            # 이 파일을 자동으로 인식하여 설정을 로드합니다.
             cat > ${JAR_DIR}/application-prod.yml <<EOF
             spring:
               datasource:
@@ -62,7 +60,8 @@ jobs:
                 password: ${{ secrets.RDS_PASSWORD }}
               jpa:
                 hibernate:
-                  ddl-auto: update # 처음에는 create, 그 다음부터는 update가 안전합니다.
+                  # ddl-auto를 create로 변경하여 첫 배포 시 테이블을 확실히 생성합니다.
+                  ddl-auto: create 
                 properties:
                   hibernate:
                     dialect: org.hibernate.dialect.PostgreSQLDialect
