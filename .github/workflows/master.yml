@@ -11,34 +11,36 @@ jobs:
 
     steps:
       # 1. 소스 코드 체크아웃
-      - name: Checkout repository
+      - name: Checkout source code
         uses: actions/checkout@v3
 
-      # 2. JDK 설정
-      - name: Set up Java 17
+      # 2. JDK 17 설치
+      - name: Set up JDK 17
         uses: actions/setup-java@v3
         with:
-          distribution: temurin
+          distribution: "temurin"
           java-version: "17"
 
-      # 3. Gradle 빌드
+      # 3. Gradle 빌드 (테스트 제외)
       - name: Build with Gradle
-        working-directory: backend/jimechu
-        run: sh gradlew clean build -x test
+        run: |
+          cd backend/jimechu
+          chmod +x ./gradlew
+          ./gradlew clean build -x test
 
-      # 4. jar 파일을 EC2 서버로 전송 (버전 업데이트)
-      - name: Copy artifact to EC2
-        uses: appleboy/scp-action@v0.1.7 # 👈 수정: v0.1.4 -> v0.1.7
+      # 4. 빌드된 JAR 파일을 EC2로 전송
+      - name: Transfer JAR to EC2
+        uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
-          debug: true
           source: "backend/jimechu/build/libs/jimechu-0.0.1-SNAPSHOT.jar"
           target: "/home/ec2-user/app/"
+          strip_components: 3 # source 경로에서 상위 3개 디렉토리(backend/jimechu/build)를 제거하고 libs/ 이하만 전송
 
-      # 5. EC2 서버에 application-prod.yml 생성 및 배포 스크립트 실행 (최종 수정)
+      # 5. EC2 서버에 application-prod.yml 생성 및 배포 스크립트 실행
       - name: Deploy application on EC2
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -47,8 +49,8 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           script: |
-            # JAR 파일이 위치할 디렉토리 경로 (***를 jimechu로 수정)
-            JAR_DIR="/home/ec2-user/app/backend/jimechu/build/libs"
+            # JAR 파일이 위치할 디렉토리 경로 (오류 수정 완료)
+            JAR_DIR="/home/ec2-user/app/libs"
 
             # 해당 디렉토리에 application-prod.yml 파일을 생성합니다.
             cat > ${JAR_DIR}/application-prod.yml <<EOF
@@ -60,7 +62,7 @@ jobs:
                 password: ${{ secrets.RDS_PASSWORD }}
               jpa:
                 hibernate:
-                  # ddl-auto를 create로 변경하여 첫 배포 시 테이블을 확실히 생성합니다.
+                  # 첫 배포 시 테이블을 확실히 생성합니다.
                   ddl-auto: create 
                 properties:
                   hibernate:
@@ -81,5 +83,5 @@ jobs:
               password: ${{ secrets.ADMIN_PASSWORD }}
             EOF
 
-            # EC2에 준비해 둔 배포 스크립트를 실행합니다.
+            # EC2에 준비해 둔 배포 스크립트를 실행합니다. (경로 수정)
             sh /home/ec2-user/app/deploy.sh
