@@ -38,8 +38,12 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(request -> request
                         .requestMatchers(
                                 "/api/auth/**",
-                                "/swagger-ui/**",
-                                "/api-docs/**",
+                                "/swagger-ui/**",           // 기존: Swagger UI
+                                "/swagger-ui.html",         // 추가: Swagger UI HTML
+                                "/v3/api-docs/**",          // 추가: OpenAPI 3.0 문서
+                                "/api-docs/**",             // 기존: API 문서 (유지)
+                                "/swagger-resources/**",    // 추가: Swagger 리소스
+                                "/webjars/**",              // 추가: Swagger UI 정적 파일
                                 "/api/topics",
                                 "/api/topics/*/menus",
                                 "/api/auth/refresh").permitAll()
