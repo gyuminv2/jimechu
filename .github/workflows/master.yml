@@ -38,7 +38,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           source: "backend/jimechu/build/libs/jimechu-0.0.1-SNAPSHOT.jar"
-          target: "/home/ec2-user/app"
+          target: "/home/ec2-user/app/libs"
           rename: "jimechu-app.jar" # 서버에서 사용할 파일 이름을 'jimechu-app.jar'로 고정
 
       # 5. EC2 서버에 application-prod.yml 생성 및 배포 스크립트 실행
@@ -50,11 +50,14 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           script: |
-            # JAR 파일이 위치할 디렉토리 경로 (오류 수정 완료)
-            JAR_DIR="/home/ec2-user/app/libs"
+            APP_DIR="/home/ec2-user/app"
+            LIBS_DIR="/home/ec2-user/app/libs"
+
+            # libs 디렉터리가 없으면 생성
+            mkdir -p ${LIBS_DIR}
 
             # 해당 디렉토리에 application-prod.yml 파일을 생성합니다.
-            cat > ${JAR_DIR}/application-prod.yml <<EOF
+            cat > ${LIBS_DIR}/application-prod.yml <<EOF
             spring:
               datasource:
                 driver-class-name: org.postgresql.Driver
@@ -84,5 +87,5 @@ jobs:
               password: ${{ secrets.ADMIN_PASSWORD }}
             EOF
 
-            # EC2에 준비해 둔 배포 스크립트를 실행합니다. (경로 수정 )
-            sh /home/ec2-user/app/deploy.sh
+            # 배포 스크립트는 app 디렉터리에 있는 것을 실행
+            sh ${APP_DIR}/deploy.sh
