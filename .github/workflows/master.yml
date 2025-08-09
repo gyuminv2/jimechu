@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - master
-    workflow_dispatch:
+  workflow_dispatch:
 
 jobs:
   deploy:
@@ -22,14 +22,18 @@ jobs:
           distribution: "temurin"
           java-version: "17"
 
-      # 3. Gradle 빌드 (테스트 제외)
+      # 3. Gradle 빌드
       - name: Build with Gradle
         run: |
           cd backend/jimechu
           chmod +x ./gradlew
           ./gradlew clean build -x test
 
-      # 4. 빌드된 JAR 파일을 EC2로 전송 (경로/이름 단순화)
+      # ★★★ 진단 1: 빌드 결과물 확인 ★★★
+      - name: Verify build artifact
+        run: ls -lR backend/jimechu/build/libs
+
+      # 4. 빌드된 JAR 파일을 EC2로 전송
       - name: Transfer JAR to EC2
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -40,6 +44,18 @@ jobs:
           source: "backend/jimechu/build/libs/*.jar"
           target: "/home/ec2-user/app/libs"
           rename: "jimechu-app.jar"
+
+      # ★★★ 진단 2: EC2 파일 전송 결과 확인 ★★★
+      - name: Verify file transfer on EC2
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ec2-user
+          key: ${{ secrets.EC2_SSH_KEY }}
+          port: 22
+          script: |
+            echo "--- Verifying files in /home/ec2-user/app ---"
+            ls -laR /home/ec2-user/app
 
       # 5. EC2 서버에 application-prod.yml 생성 및 배포 스크립트 실행
       - name: Deploy application on EC2
@@ -53,10 +69,8 @@ jobs:
             APP_DIR="/home/ec2-user/app"
             LIBS_DIR="/home/ec2-user/app/libs"
 
-            # libs 디렉터리가 없으면 생성
             mkdir -p ${LIBS_DIR}
 
-            # 해당 디렉토리에 application-prod.yml 파일을 생성합니다.
             cat > ${LIBS_DIR}/application-prod.yml <<EOF
             spring:
               datasource:
@@ -66,7 +80,6 @@ jobs:
                 password: ${{ secrets.RDS_PASSWORD }}
               jpa:
                 hibernate:
-                  # 첫 배포 시 테이블을 확실히 생성합니다.
                   ddl-auto: create 
                 properties:
                   hibernate:
@@ -87,5 +100,4 @@ jobs:
               password: ${{ secrets.ADMIN_PASSWORD }}
             EOF
 
-            # 배포 스크립트는 app 디렉터리에 있는 것을 실행
             sh ${APP_DIR}/deploy.sh
