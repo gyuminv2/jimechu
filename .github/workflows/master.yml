@@ -31,15 +31,16 @@ jobs:
 
       # 4. 빌드된 JAR 파일을 EC2로 전송 (경로/이름 단순화)
       - name: Transfer JAR to EC2
+        working-directory: backend/jimechu/build/libs
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.EC2_HOST }}
           username: ec2-user
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
-          source: "backend/jimechu/build/libs/jimechu-0.0.1-SNAPSHOT.jar"
+          source: "jimechu-0.0.1-SNAPSHOT.jar"
           target: "/home/ec2-user/app/libs"
-          rename: "jimechu-app.jar" # 서버에서 사용할 파일 이름을 'jimechu-app.jar'로 고정
+          rename: "jimechu-app.jar"
 
       # 5. EC2 서버에 application-prod.yml 생성 및 배포 스크립트 실행
       - name: Deploy application on EC2
