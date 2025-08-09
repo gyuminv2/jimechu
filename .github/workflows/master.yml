@@ -42,8 +42,7 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           source: "backend/jimechu/build/libs/*.jar"
-          target: "/home/ec2-user/app/libs"
-          rename: "jimechu-app.jar"
+          target: "/home/ec2-user/temp" # 임시 위치로 전송
 
       # ★★★ 진단 2: EC2 파일 전송 결과 확인 ★★★
       - name: Verify file transfer on EC2
@@ -54,10 +53,10 @@ jobs:
           key: ${{ secrets.EC2_SSH_KEY }}
           port: 22
           script: |
-            echo "--- Verifying files in /home/ec2-user/app ---"
-            ls -laR /home/ec2-user/app
+            echo "--- Verifying files in /home/ec2-user/temp ---"
+            ls -laR /home/ec2-user/temp
 
-      # 5. EC2 서버에 application-prod.yml 생성 및 배포 스크립트 실행
+      # 5. 파일 정리 및 application-prod.yml 생성, 배포 스크립트 실행
       - name: Deploy application on EC2
         uses: appleboy/ssh-action@v1.0.3
         with:
@@ -69,8 +68,23 @@ jobs:
             APP_DIR="/home/ec2-user/app"
             LIBS_DIR="/home/ec2-user/app/libs"
 
+            # libs 디렉터리 생성
             mkdir -p ${LIBS_DIR}
 
+            # 기존 JAR 파일 정리
+            rm -f ${LIBS_DIR}/*.jar
+
+            # temp에서 실제 JAR 파일 찾아서 libs로 복사 (jimechu-app.jar로 이름 변경)
+            find /home/ec2-user/temp -name "jimechu-0.0.1-SNAPSHOT.jar" -exec cp {} ${LIBS_DIR}/jimechu-app.jar \;
+
+            # temp 디렉터리 정리
+            rm -rf /home/ec2-user/temp
+
+            # 복사 결과 확인
+            echo "--- Final JAR file location ---"
+            ls -la ${LIBS_DIR}/
+
+            # application-prod.yml 생성
             cat > ${LIBS_DIR}/application-prod.yml <<EOF
             spring:
               datasource:
@@ -100,4 +114,5 @@ jobs:
               password: ${{ secrets.ADMIN_PASSWORD }}
             EOF
 
+            # 배포 스크립트 실행
             sh ${APP_DIR}/deploy.sh
